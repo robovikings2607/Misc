@@ -1,0 +1,48 @@
+﻿Build started 4/15/2014 1:15:53 PM.
+     1>Project "C:\Users\rossron\Documents\Visual Studio 2010\Projects\2CAN-PCDriver\2CAN-PCDriver\2CAN-PCDriver.vcxproj" on node 2 (rebuild target(s)).
+     1>_PrepareForClean:
+         Deleting file "Release\2CAN-PCDriver.lastbuildstate".
+       InitializeBuildStatus:
+         Creating "Release\2CAN-PCDriver.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         c:\VisualStudio2010\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt 2CAN.cpp Joystick.cpp Main.cpp RxUDPSocket.cpp TxUDPSocket.cpp
+         2CAN.cpp
+     1>2CAN.cpp(130): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\VisualStudio2010\VC\include\string.h(105) : see declaration of 'strcpy'
+     1>2CAN.cpp(169): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\VisualStudio2010\VC\include\string.h(105) : see declaration of 'strcpy'
+     1>2CAN.cpp(171): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\VisualStudio2010\VC\include\string.h(105) : see declaration of 'strcpy'
+     1>2CAN.cpp(176): warning C4309: 'initializing' : truncation of constant value
+     1>2CAN.cpp(176): warning C4309: 'initializing' : truncation of constant value
+     1>2CAN.cpp(176): warning C4309: 'initializing' : truncation of constant value
+     1>2CAN.cpp(176): warning C4309: 'initializing' : truncation of constant value
+     1>2CAN.cpp(177): warning C4309: 'initializing' : truncation of constant value
+     1>2CAN.cpp(177): warning C4309: 'initializing' : truncation of constant value
+     1>2CAN.cpp(227): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\VisualStudio2010\VC\include\stdio.h(371) : see declaration of 'sprintf'
+     1>2CAN.cpp(438): warning C4244: '=' : conversion from 'const unsigned short' to 'unsigned char', possible loss of data
+         Joystick.cpp
+     1>Joystick.cpp(139): warning C4800: 'BYTE' : forcing value to bool 'true' or 'false' (performance warning)
+         Main.cpp
+         RxUDPSocket.cpp
+     1>RxUDPSocket.cpp(17): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\VisualStudio2010\VC\include\string.h(105) : see declaration of 'strcpy'
+     1>RxUDPSocket.cpp(151): warning C4244: 'argument' : conversion from 'unsigned long' to 'u_short', possible loss of data
+         TxUDPSocket.cpp
+     1>TxUDPSocket.cpp(16): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\VisualStudio2010\VC\include\string.h(105) : see declaration of 'strcpy'
+     1>TxUDPSocket.cpp(88): warning C4244: 'argument' : conversion from 'unsigned long' to 'u_short', possible loss of data
+     1>TxUDPSocket.cpp(152): warning C4244: 'argument' : conversion from 'unsigned long' to 'u_short', possible loss of data
+       Link:
+         c:\VisualStudio2010\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\rossron\Documents\Visual Studio 2010\Projects\2CAN-PCDriver\Release\2CAN-PCDriver.exe" /INCREMENTAL:NO /NOLOGO wsock32.lib dinput8.lib dxguid.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\2CAN-PCDriver.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\rossron\Documents\Visual Studio 2010\Projects\2CAN-PCDriver\Release\2CAN-PCDriver.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\rossron\Documents\Visual Studio 2010\Projects\2CAN-PCDriver\Release\2CAN-PCDriver.lib" /MACHINE:X86 Release\2CAN.obj
+         Release\Joystick.obj
+         Release\Main.obj
+         Release\RxUDPSocket.obj
+         Release\TxUDPSocket.obj
+     1>LINK : fatal error LNK1181: cannot open input file 'dxguid.lib'
+     1>Done Building Project "C:\Users\rossron\Documents\Visual Studio 2010\Projects\2CAN-PCDriver\2CAN-PCDriver\2CAN-PCDriver.vcxproj" (rebuild target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:08.49
