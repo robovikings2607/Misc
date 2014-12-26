@@ -53,18 +53,12 @@ public class OctaBot extends IterativeRobot {
         solenoid = new Solenoid(OctaBotConstants.solenoidChannel);
         robotDrive = new RobotDrive(FL, BL, FR, BR);
         System.out.println("OctaWheel is ALIVE!");
+        System.out.println("Use Test Mode to calibrate PWM's; button 3 is full forward, button 2 full reverse");
     }
 
-    /**
-     * This function is called periodically during autonomous
-     */
-    public void autonomousPeriodic() {
-
+    public void disabledInit() {
+    	compressor.stop();
     }
-
-    /**
-     * This function is called periodically during operator control
-     */
     
     public void teleopInit() {
         compressor.start();
@@ -82,15 +76,26 @@ public class OctaBot extends IterativeRobot {
        
     }
     
-    /**
-     * This function is called periodically during test mode
-     */
     public void testPeriodic() {
-    
+    	// calibrate PWM motor controllers
+    	if (theElderWand.getRawButton(2)) {
+    		FR.set(-1.0);
+    		FL.set(-1.0);
+    		BR.set(-1.0);
+    		BL.set(-1.0);
+    	} else {
+    		if (theElderWand.getRawButton(3)) {
+    			FR.set(1.0);
+    			FL.set(1.0);
+    			BR.set(1.0);
+    			BL.set(1.0);
+    		} else {
+    			FR.set(0);
+    			FL.set(0);
+    			BL.set(0);
+    			BR.set(0);
+    		}
+    	}
     }
-    
-    public void disabledPeriodic(){
-       
-    }
-    
+        
 }
