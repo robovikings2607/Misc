@@ -7,7 +7,7 @@ apply plugin: 'idea'
 sourceCompatibility = 1.4
 
 project.ext {
-   cRIOSDKDir = "d:/frc-2016/cRIO-build"
+   cRIOSDKDir = "c:/path/to/cRIO-build"
    teamNumber = 2607
     robotClassName = "RobotTemplate"
     robotPackage = "edu.wpi.first.wpilibj.templates"

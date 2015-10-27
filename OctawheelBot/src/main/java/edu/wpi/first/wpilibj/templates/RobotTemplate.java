@@ -19,26 +19,27 @@ import edu.wpi.first.wpilibj.RobotDrive;
  * directory.
  */
 public class RobotTemplate extends IterativeRobot {
-    
+
     Jaguar frontLeft , frontRight , rearLeft , rearRight;
     robovikingStick AController, BController;
     RobotDrive roboDrive;
-    
+
     Constants c = new Constants();
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     // added this comment for git testing
+    // added this one too!
     public void robotInit() {
         AController = new robovikingStick(c.getLeftStickPort());
         BController = new robovikingStick(c.getRightStickPort());
-        
+
         frontLeft = new Jaguar(c.getFLMotorChannel());
         frontRight = new Jaguar(c.getFRMotorChannel());
         rearLeft = new Jaguar(c.getRLMotorChannel());
         rearRight = new Jaguar(c.getRRMotorChannel());
-        
+
         roboDrive = new RobotDrive(frontLeft , rearLeft , frontRight , rearRight);
 //        roboDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
 //        roboDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
@@ -55,7 +56,7 @@ public class RobotTemplate extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        
+
         if(AController.getToggleButton(c.getButtonA())){
           roboDrive.tankDrive(-AController.getY(), -BController.getY());
           c.displayTankMode();
