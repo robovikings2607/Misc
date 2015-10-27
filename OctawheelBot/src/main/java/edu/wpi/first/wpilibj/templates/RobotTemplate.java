@@ -29,6 +29,7 @@ public class RobotTemplate extends IterativeRobot {
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
+    // added this comment for git testing
     public void robotInit() {
         AController = new robovikingStick(c.getLeftStickPort());
         BController = new robovikingStick(c.getRightStickPort());
