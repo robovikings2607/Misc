@@ -82,10 +82,10 @@ public class Robot extends IterativeRobot {
     		// throttle mode
     		mode = "VBUS";
     		armMotor.changeControlMode(TalonControlMode.PercentVbus);
-    		if (stick.getRawButton(4)) {
-    			armMotor.set(.5);
-    		} else if (stick.getRawButton(1)) {
-    			armMotor.set(-.5);
+    		if (stick.getToggleButton(4)) {
+    			armMotor.set(1.0);
+    		} else if (stick.getToggleButton(1)) {
+    			armMotor.set(-1.0);
     		} else {
     			armMotor.set(0);
     		}

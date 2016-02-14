@@ -3,3 +3,8 @@ Arm position control info
 1 motor rev = .0035 arm rev = (84/24/5/5/4) = 1.26deg
 
 100 motor turns = 1 output shaft turn on planetary   (100 / 5 / 5 / 4)
+
+6087 RPM max, 41560 native 
+
+encoder position is reversed (forward voltage generates negative position/velocity)
+
