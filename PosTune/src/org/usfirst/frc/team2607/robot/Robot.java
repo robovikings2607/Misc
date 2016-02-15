@@ -33,7 +33,7 @@ public class Robot extends IterativeRobot {
     	armMotor.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
     	armMotor.reverseSensor(true);
     	armMotor.configNominalOutputVoltage(+0.0, -0.0);
-    	armMotor.configPeakOutputVoltage(6.0, -6.0);
+    	armMotor.configPeakOutputVoltage(12.0, -12.0);
     	armMotor.setAllowableClosedLoopErr(0);
     	armMotor.setProfile(0);
     	armMotor.setPID(0.05, 0.0, 0.0);
@@ -64,6 +64,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     private int tick = 0;
+    private long startTime, totalTime;
     String mode = "UNKOWN";
     public void teleopPeriodic() {
     	
@@ -71,13 +72,20 @@ public class Robot extends IterativeRobot {
     		// position control mode
     		mode = "POS";
     		if (stick.getButtonPressedOneShot(4)) {	// Button Y on xBox Controller
-    			targetPos += 25;
+    			targetPos += 100;
+    			startTime = System.currentTimeMillis();
+    			totalTime = 0;
     		}
     		if (stick.getButtonPressedOneShot(1)) { // Button A on xBox Controller
-    			targetPos -= 25;
+    			targetPos -= 100;
+    			startTime = System.currentTimeMillis();
+    			totalTime = 0;
     		}
     		armMotor.changeControlMode(TalonControlMode.Position);
     		armMotor.set(targetPos);
+    		if (armMotor.getSpeed() == 0.0 && startTime != 0) {
+    			totalTime = System.currentTimeMillis() - startTime;
+    		}
     	} else {
     		// throttle mode
     		mode = "VBUS";
@@ -101,7 +109,10 @@ public class Robot extends IterativeRobot {
         	tick = 0;
         	System.out.println("Mode: " + mode + 
         					   "\t\tSP: " + targetPos +
-        						"\t\tPV: " + armMotor.getPosition());
+        						"\t\tPV: " + armMotor.getPosition() +
+        						"\t\tOUTP: " + armMotor.getOutputVoltage() +
+        						"\t\tSPEED: " + armMotor.getSpeed() + 
+        						"\t\tTIME: " + totalTime + "ms");
         }
     }
     
