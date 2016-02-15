@@ -35,7 +35,8 @@ public class Robot extends IterativeRobot {
     	armMotor.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
     	armMotor.reverseSensor(true);
     	armMotor.setProfile(0);
-    	armMotor.setF(0.02461501443695861405197305101059);	// 1023 / 41560
+//    	armMotor.setF(0.02461501443695861405197305101059);	// 1023 / 41560
+    	armMotor.setF(0.001);
     	targetPos = 0.0;
     }
     
