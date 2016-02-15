@@ -8,8 +8,7 @@ import java.util.ArrayList;
  * 
  * NOTE:  sign of maxSpeed and targetDist must always match and reflect desired direction of travel.  
  * For example if I'm currently at position 25 and my new target is position -25, my maxSpeed is negative and my
- * targetDist is -50 (also will need to set position of 1st trajectory point to starting position (25) to generate the
- * profile)
+ * targetDist is -50
  *
  * accelTime (ms)
  * decelTime (ms)
