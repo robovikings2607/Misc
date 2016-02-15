@@ -211,7 +211,7 @@ public class MotionProfileExample {
 	/** Start filling the MPs to all of the involved Talons. */
 	private void startFilling() {
 		/* since this example only has one talon, just update that one */
-		startFilling(ExcelProfile.Points, ExcelProfile.kNumPoints);
+		startFilling(Excel200ms.Points, Excel200ms.kNumPoints);
 	}
 
 	private void startFilling(double[][] profile, int totalCnt) {
