@@ -21,6 +21,7 @@ public class Robot extends IterativeRobot {
 	private CANTalon armMotor;
 	private RobovikingStick stick;
 	private double targetPos;
+	private MotionProfileExample profile;
 	
     /**
      * This function is run when the robot is first started up and should be
@@ -28,15 +29,13 @@ public class Robot extends IterativeRobot {
      */
     public void robotInit() {
     	armMotor = new CANTalon(10);
+    	profile = new MotionProfileExample(armMotor);
     	stick = new RobovikingStick(0);
     	armMotor.setEncPosition(armMotor.getPulseWidthPosition() & 0xFFF);
     	armMotor.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
     	armMotor.reverseSensor(true);
-    	armMotor.configNominalOutputVoltage(+0.0, -0.0);
-    	armMotor.configPeakOutputVoltage(12.0, -12.0);
-    	armMotor.setAllowableClosedLoopErr(0);
     	armMotor.setProfile(0);
-    	armMotor.setPID(0.05, 0.0, 0.0);
+    	armMotor.setF(0.02461501443695861405197305101059);	// 1023 / 41560
     	targetPos = 0.0;
     }
     
@@ -65,31 +64,44 @@ public class Robot extends IterativeRobot {
      */
     private int tick = 0;
     private long startTime, totalTime;
-    String mode = "UNKOWN";
+    private String mode = "UNKOWN";
+    
+    public void disabledPeriodic() {
+    	armMotor.changeControlMode(TalonControlMode.PercentVbus);
+    	armMotor.set(0);
+    	profile.reset();
+    }
+    
     public void teleopPeriodic() {
     	
+    	profile.control();
+    	
     	if (stick.getToggleButton(3)) { // Button X on xBox Controller
-    		// position control mode
-    		mode = "POS";
+    		// motion profile mode
+    		mode = "MPROF";
     		if (stick.getButtonPressedOneShot(4)) {	// Button Y on xBox Controller
+    			profile.startMotionProfile();
+    		}
+/*
     			targetPos += 100;
     			startTime = System.currentTimeMillis();
     			totalTime = 0;
+
     		}
     		if (stick.getButtonPressedOneShot(1)) { // Button A on xBox Controller
     			targetPos -= 100;
     			startTime = System.currentTimeMillis();
     			totalTime = 0;
     		}
-    		armMotor.changeControlMode(TalonControlMode.Position);
-    		armMotor.set(targetPos);
-    		if (armMotor.getSpeed() == 0.0 && startTime != 0) {
-    			totalTime = System.currentTimeMillis() - startTime;
-    		}
+*/
+    		armMotor.changeControlMode(TalonControlMode.MotionProfile);
+    		armMotor.set(profile.getSetValue().value);
+    	
     	} else {
     		// throttle mode
     		mode = "VBUS";
     		armMotor.changeControlMode(TalonControlMode.PercentVbus);
+    		profile.reset();
     		if (stick.getToggleButton(4)) {
     			armMotor.set(1.0);
     		} else if (stick.getToggleButton(1)) {
@@ -124,3 +136,28 @@ public class Robot extends IterativeRobot {
     }
     
 }
+
+/*
+armMotor.configNominalOutputVoltage(+0.0, -0.0);
+armMotor.configPeakOutputVoltage(12.0, -12.0);
+armMotor.setAllowableClosedLoopErr(0);
+armMotor.setProfile(0);
+armMotor.setPID(0.05, 0.0, 0.0);
+*/
+
+/*
+// position control mode
+mode = "POS";
+if (stick.getButtonPressedOneShot(4)) {	// Button Y on xBox Controller
+	targetPos += 100;
+	startTime = System.currentTimeMillis();
+	totalTime = 0;
+}
+if (stick.getButtonPressedOneShot(1)) { // Button A on xBox Controller
+	targetPos -= 100;
+	startTime = System.currentTimeMillis();
+	totalTime = 0;
+}
+armMotor.changeControlMode(TalonControlMode.Position);
+armMotor.set(targetPos);
+*/

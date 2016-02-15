@@ -8,3 +8,8 @@ Arm position control info
 
 encoder position is reversed (forward voltage generates negative position/velocity)
 
+6087 RPM / 60sec = 101.45 RPS
+
+Feedforward = 1023 / 41560 = 0.02461501443695861405197305101059
+
+
