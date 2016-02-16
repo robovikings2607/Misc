@@ -21,7 +21,7 @@ public class Robot extends IterativeRobot {
 	private CANTalon armMotor;
 	private RobovikingStick stick;
 	private double targetPos;
-	private MotionProfileExample profile;
+	private SRXProfileDriver profile;
 	private int modeIndex;
 	
     /**
@@ -30,7 +30,7 @@ public class Robot extends IterativeRobot {
      */
     public void robotInit() {
     	armMotor = new CANTalon(10);
-    	profile = new MotionProfileExample(armMotor);
+    	profile = new SRXProfileDriver(armMotor);
     	stick = new RobovikingStick(0);
 //    	armMotor.setEncPosition(armMotor.getPulseWidthPosition() & 0xFFF);
     	armMotor.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
@@ -112,8 +112,14 @@ public class Robot extends IterativeRobot {
     			armMotor.set(profile.getSetValue().value);
     			profile.control();
         		if (stick.getButtonPressedOneShot(4)) {	// Button Y on xBox Controller
+        			profile.setMotionProfile(new SRXProfile(101.45, 25, 300, 300, 20));
         			profile.startMotionProfile();
         		}
+        		if (stick.getButtonPressedOneShot(1)) { // Button A on xBox Controller
+        			profile.setMotionProfile(new SRXProfile(-101.45, -25, 300, 300, 20));
+        			profile.startMotionProfile();
+        		}
+        		
     			break;
     	}
     	    	

@@ -4,8 +4,10 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.Notifier;
 
-public class MotionProfileExample {
+public class SRXProfileDriver {
 
+	private SRXProfile motionProfile;
+	
 	/**
 	 * The status of the motion profile executer and buffer inside the Talon.
 	 * Instead of creating a new one every time we call getMotionProfileStatus,
@@ -77,7 +79,7 @@ public class MotionProfileExample {
 	 * @param talon
 	 *            reference to Talon object to fetch motion profile status from.
 	 */
-	public MotionProfileExample(CANTalon talon) {
+	public SRXProfileDriver(CANTalon talon) {
 		_talon = talon;
 		/*
 		 * since our MP is 10ms per point, set the control frame rate and the
@@ -87,6 +89,10 @@ public class MotionProfileExample {
 		_notifer.startPeriodic(0.005);
 	}
 
+	public void setMotionProfile(SRXProfile p) {
+		motionProfile = p;
+	}
+	
 	/**
 	 * Called to clear Motion profile buffer and reset state info during
 	 * disabled and when Talon is not in MP control mode.
@@ -155,9 +161,29 @@ public class MotionProfileExample {
 				case 0: /* wait for application to tell us to start an MP */
 					if (_bStart) {
 						_bStart = false;
-	
+						if (motionProfile == null) return;		// if user hasn't already called setProfile, stay in state 0
+						
 						_setValue = CANTalon.SetValueMotionProfile.Disable;
-						startFilling();
+						/* did we get an underrun condition since last time we checked ? */
+						if (_status.hasUnderrun) {
+							/* better log it so we know about it */
+//							instrumentation.OnUnderrun();
+							System.out.println("UNDERRUN");
+							/*
+							 * clear the error. This flag does not auto clear, this way 
+							 * we never miss logging it.
+							 */
+							_talon.clearMotionProfileHasUnderrun();
+						}
+						/*
+						 * just in case we are interrupting another MP and there is still buffer
+						 * points in memory, clear it.
+						 */
+						_talon.clearMotionProfileTrajectories();
+
+						// create and push the profile
+						motionProfile.generateAndPushProfile(_talon);
+
 						/*
 						 * MP is being sent to CAN bus, wait a small amount of time
 						 */
@@ -219,22 +245,6 @@ public class MotionProfileExample {
 		/* create an empty point */
 		CANTalon.TrajectoryPoint point = new CANTalon.TrajectoryPoint();
 
-		/* did we get an underrun condition since last time we checked ? */
-		if (_status.hasUnderrun) {
-			/* better log it so we know about it */
-//			instrumentation.OnUnderrun();
-			System.out.println("UNDERRUN");
-			/*
-			 * clear the error. This flag does not auto clear, this way 
-			 * we never miss logging it.
-			 */
-			_talon.clearMotionProfileHasUnderrun();
-		}
-		/*
-		 * just in case we are interrupting another MP and there is still buffer
-		 * points in memory, clear it.
-		 */
-		_talon.clearMotionProfileTrajectories();
 
 		/* This is fast since it's just into our TOP buffer */
 		for (int i = 0; i < totalCnt; ++i) {
