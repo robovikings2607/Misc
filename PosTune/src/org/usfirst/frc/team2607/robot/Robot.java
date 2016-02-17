@@ -38,7 +38,9 @@ public class Robot extends IterativeRobot {
     	armMotor.setProfile(0);
 //    	armMotor.setF(0.02461501443695861405197305101059);	// 1023 / 41560
     	armMotor.setF(0.001);
-    	armMotor.setP(.01);
+    	armMotor.setP(.022);
+    	armMotor.setI(0);
+    	armMotor.setD(0);
     	targetPos = 0.0;
     	modeIndex = 0;
     }
@@ -109,14 +111,15 @@ public class Robot extends IterativeRobot {
     			break;
     		case 3:			// MPROF
     			armMotor.changeControlMode(TalonControlMode.MotionProfile);
+    			armMotor.configPeakOutputVoltage(12.0, -12.0);
     			armMotor.set(profile.getSetValue().value);
     			profile.control();
         		if (stick.getButtonPressedOneShot(4)) {	// Button Y on xBox Controller
-        			profile.setMotionProfile(new SRXProfile(101.45, 25, 300, 300, 20));
+        			profile.setMotionProfile(new SRXProfile(101.45, 25, 250, 250, 10));
         			profile.startMotionProfile();
         		}
         		if (stick.getButtonPressedOneShot(1)) { // Button A on xBox Controller
-        			profile.setMotionProfile(new SRXProfile(-101.45, -25, 300, 300, 20));
+        			profile.setMotionProfile(new SRXProfile(-101.45, -25, 250, 250, 10));
         			profile.startMotionProfile();
         		}
         		
