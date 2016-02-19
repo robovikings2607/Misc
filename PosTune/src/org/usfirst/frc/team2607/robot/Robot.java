@@ -23,6 +23,7 @@ public class Robot extends IterativeRobot {
 	private double targetPos;
 	private SRXProfileDriver profile;
 	private int modeIndex;
+	private double armMotorEncPos;
 	
     /**
      * This function is run when the robot is first started up and should be
@@ -35,11 +36,14 @@ public class Robot extends IterativeRobot {
 //    	armMotor.setEncPosition(armMotor.getPulseWidthPosition() & 0xFFF);
     	armMotor.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
     	armMotor.reverseSensor(true);
+    	armMotorEncPos = armMotor.getPosition();
+//    	armMotor.setForwardSoftLimit(armMotorEncPos);
+//   	armMotor.enableForwardSoftLimit(true);
     	armMotor.setProfile(0);
 //    	armMotor.setF(0.02461501443695861405197305101059);	// 1023 / 41560
-    	armMotor.setF(0.001);
+    	armMotor.setF(0.002);
     	armMotor.setP(.022);
-    	armMotor.setI(0);
+    	armMotor.setI(0.0001);
     	armMotor.setD(0);
     	targetPos = 0.0;
     	modeIndex = 0;
@@ -115,12 +119,14 @@ public class Robot extends IterativeRobot {
     			armMotor.set(profile.getSetValue().value);
     			profile.control();
         		if (stick.getButtonPressedOneShot(4)) {	// Button Y on xBox Controller
-        			profile.setMotionProfile(new SRXProfile(25, 25, 250, 250, 10));
+        			profile.setMotionProfile(new SRXProfile(23, armMotorEncPos, 4.861, 250, 250, 10));
         			profile.startMotionProfile();
+        			armMotorEncPos += 4.861;
         		}
         		if (stick.getButtonPressedOneShot(1)) { // Button A on xBox Controller
-        			profile.setMotionProfile(new SRXProfile(-25, -25, 250, 250, 10));
+        			profile.setMotionProfile(new SRXProfile(-23, armMotorEncPos, -4.861, 250, 250, 10));
         			profile.startMotionProfile();
+        			armMotorEncPos -= 4.861;
         		}
         		
     			break;
