@@ -90,10 +90,10 @@ public class Robot extends IterativeRobot {
     		case 1:			// VBUS
         		armMotor.changeControlMode(TalonControlMode.PercentVbus);
         		profile.reset();
-        		if (stick.getToggleButton(4)) {				// xBox Button Y
-        			armMotor.set(1.0);
-        		} else if (stick.getToggleButton(1)) {
-        			armMotor.set(-1.0);						// xBox Button A
+        		if (stick.getRawButton(4)) {				// xBox Button Y
+        			armMotor.set(.25);
+        		} else if (stick.getRawButton(1)) {
+        			armMotor.set(-.25);						// xBox Button A
         		} else {
         			armMotor.set(0);
         		}
@@ -115,11 +115,11 @@ public class Robot extends IterativeRobot {
     			armMotor.set(profile.getSetValue().value);
     			profile.control();
         		if (stick.getButtonPressedOneShot(4)) {	// Button Y on xBox Controller
-        			profile.setMotionProfile(new SRXProfile(101.45, 25, 250, 250, 10));
+        			profile.setMotionProfile(new SRXProfile(25, 25, 250, 250, 10));
         			profile.startMotionProfile();
         		}
         		if (stick.getButtonPressedOneShot(1)) { // Button A on xBox Controller
-        			profile.setMotionProfile(new SRXProfile(-101.45, -25, 250, 250, 10));
+        			profile.setMotionProfile(new SRXProfile(-25, -25, 250, 250, 10));
         			profile.startMotionProfile();
         		}
         		
