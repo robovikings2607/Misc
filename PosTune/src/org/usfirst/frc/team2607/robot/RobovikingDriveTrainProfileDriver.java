@@ -56,9 +56,8 @@ public class RobovikingDriveTrainProfileDriver {
 
 	Notifier pointExecutor = new Notifier(new PeriodicRunnable());
 
-	public RobovikingDriveTrainProfileDriver(Transmission leftMotors, double dtSeconds, Path path) {
+	public RobovikingDriveTrainProfileDriver(Transmission leftMotors, Path path) {
 		this.leftMotors = leftMotors;
-		this.dtSeconds = dtSeconds;
 		this.path = path;
 		this.leftVelPts = new ArrayList<Segment>();
 		//store the velocity pts
@@ -67,6 +66,7 @@ public class RobovikingDriveTrainProfileDriver {
 		
 		for (int i = 0; i < numPoints; i++) {
 			leftVelPts.add(lt.getSegment(i));
+			if (i==0) dtSeconds = lt.getSegment(i).dt;
 		}
 	}
 
