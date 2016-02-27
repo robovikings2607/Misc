@@ -11,8 +11,9 @@ import edu.wpi.first.wpilibj.Talon;
 
 public class Robot extends IterativeRobot {
 
-	private Transmission t;
+	public Transmission t;
 	private RobovikingDriveTrainProfileDriver mp;
+	private PIDLogger log;
 	@Override
 	public void robotInit() {
 		t = new Transmission();
@@ -34,6 +35,7 @@ public class Robot extends IterativeRobot {
     	
     	mp = new RobovikingDriveTrainProfileDriver(t, config.dt, path);
 
+    	log = new PIDLogger(this);
 	}
 
 	@Override
@@ -43,11 +45,13 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopInit() {
 		mp.followPath();
+		log.start();
+		log.enableLogging(true);
 	}
 
 	@Override
 	public void disabledPeriodic() {
-
+		log.enableLogging(false);
 	}
 
 	int tick = 0;

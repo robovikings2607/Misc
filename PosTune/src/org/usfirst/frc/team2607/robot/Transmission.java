@@ -7,8 +7,8 @@ import edu.wpi.first.wpilibj.Talon;
 public class Transmission {
 	
 	private Talon m;
-	private RobovikingModPIDController pidLoop;
-	private SmoothedEncoder enc;
+	public RobovikingModPIDController pidLoop;
+	public SmoothedEncoder enc;
 	
 	public Transmission() {
 		enc = new SmoothedEncoder(0 , 1 , false, Encoder.EncodingType.k1X);

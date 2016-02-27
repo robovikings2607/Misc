@@ -433,12 +433,21 @@ public class RobovikingModPIDController implements LiveWindowSendable {
   }
 
   /**
-   * Get the Feed forward coefficient
+   * Get the Feed forward velocity coefficient
    *$
    * @return feed forward coefficient
    */
-  public synchronized double getF() {
+  public synchronized double getV() {
     return m_V;
+  }
+  
+  /**
+   * Get the Feed forward acceleration coefficient
+   *$
+   * @return feed forward coefficient
+   */
+  public synchronized double getA() {
+    return m_A;
   }
 
   /**
@@ -788,7 +797,7 @@ public class RobovikingModPIDController implements LiveWindowSendable {
     public void valueChanged(ITable table, String key, Object value, boolean isNew) {
       if (key.equals("p") || key.equals("i") || key.equals("d") || key.equals("f")) {
         if (getP() != table.getNumber("p", 0.0) || getI() != table.getNumber("i", 0.0)
-            || getD() != table.getNumber("d", 0.0) || getF() != table.getNumber("f", 0.0))
+            || getD() != table.getNumber("d", 0.0) || getV() != table.getNumber("f", 0.0))
           setPID(table.getNumber("p", 0.0), table.getNumber("i", 0.0), table.getNumber("d", 0.0),
               table.getNumber("f", 0.0));
       } else if (key.equals("setpoint")) {
@@ -816,7 +825,7 @@ public class RobovikingModPIDController implements LiveWindowSendable {
       table.putNumber("p", getP());
       table.putNumber("i", getI());
       table.putNumber("d", getD());
-      table.putNumber("f", getF());
+      table.putNumber("f", getV());
       table.putNumber("setpoint", getSetpoint()[0]);
       table.putBoolean("enabled", isEnable());
       table.addTableListener(listener, false);
