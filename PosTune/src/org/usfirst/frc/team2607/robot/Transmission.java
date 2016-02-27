@@ -8,17 +8,17 @@ public class Transmission {
 	
 	private Talon m;
 	public RobovikingModPIDController pidLoop;
-	public SmoothedEncoder enc;
+	public Encoder enc;
 	
 	public Transmission() {
-		enc = new SmoothedEncoder(0 , 1 , false, Encoder.EncodingType.k1X);
+		enc = new Encoder(0 , 1 , false, Encoder.EncodingType.k1X);
 		enc.setPIDSourceType(PIDSourceType.kDisplacement);
 		enc.reset();
 		enc.setDistancePerPulse(0.00766990393942820614859043794746);	// ((Wheel Di. (in) / 12) * pi) / enc counts
 
 		m =  new Talon(0);
 
-		pidLoop = new RobovikingModPIDController(0.01, 0.000, 0.0, 0.0151, 0.00121, enc, m);
+		pidLoop = new RobovikingModPIDController(0.05, 0.001, 0.0, 0.0151, 0.00121, enc, m);
 		pidLoop.setPositionInputRange(0, 7000.0);
 		pidLoop.setAccelerationInputRange(-20, 20);
 		pidLoop.setVelocityInputRange(-15.0, 15.0);

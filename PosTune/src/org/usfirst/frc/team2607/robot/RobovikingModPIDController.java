@@ -287,6 +287,7 @@ public class RobovikingModPIDController implements LiveWindowSendable {
         }
 
         if (m_pidInput.getPIDSourceType().equals(PIDSourceType.kRate)) {
+        	//System.out.println("RATE MODE");
           if (m_P != 0) {
             double potentialPGain = (m_totalError + m_error) * m_P;
             if (potentialPGain < m_maximumOutput) {
@@ -304,6 +305,7 @@ public class RobovikingModPIDController implements LiveWindowSendable {
           }
         }
         else {
+        	//System.out.println("DISP MODE");
           if (m_I != 0) {
             double potentialIGain = (m_totalError + m_error) * m_I;
             if (potentialIGain < m_maximumOutput) {

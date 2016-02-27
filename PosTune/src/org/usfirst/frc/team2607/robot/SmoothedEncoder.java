@@ -25,8 +25,15 @@ public class SmoothedEncoder extends Encoder implements Runnable {
     }
     
     public double pidGet() {
-        return currentRate;
-    }
+        switch (this.getPIDSourceType()) {
+          case kDisplacement:
+            return getDistance();
+          case kRate:
+            return getRate();
+          default:
+            return 0.0;
+        }
+      }
 
     public void run() {
         while (true) {

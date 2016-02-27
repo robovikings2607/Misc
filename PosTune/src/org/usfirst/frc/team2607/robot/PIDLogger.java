@@ -33,9 +33,9 @@ public class PIDLogger extends Thread {
 	    			logFile = null;
 	    		}
 	    		try {
-	    			String s = "/home/lvuser/" + "MatchFiles" + "." + System.currentTimeMillis() + ".csv";
+	    			String s = "/home/lvuser/" + "TuneFiles" + "." + System.currentTimeMillis() + ".csv";
 	    			logFile = new PrintWriter(new File(s));
-	    			logFile.println("Time,SetPos,RealPos,SetVel,RealVel,PCon,ICon,DCon,VCon,ACon");
+	    			logFile.println("Time,SetPos,RealPos,SetVel,RealVel,Error,PCon,ICon,DCon,VCon,ACon");
 	    		} catch (Exception e) {}
 	    	} 
 	    	
@@ -56,6 +56,7 @@ public class PIDLogger extends Thread {
 	        					theBot.t.enc.getDistance() + "," +
 	        				    theBot.t.pidLoop.getSetpoint()[1] + "," + 
 	        					theBot.t.enc.getRate() + "," + 
+	        				    theBot.t.pidLoop.getError() + "," +
 	        				    (theBot.t.pidLoop.getError() * theBot.t.pidLoop.getP()) + "," +
 	        				    (theBot.t.pidLoop.getError() * theBot.t.pidLoop.getI()) + "," +
 	        				    (theBot.t.pidLoop.getError() * theBot.t.pidLoop.getD()) + "," +
