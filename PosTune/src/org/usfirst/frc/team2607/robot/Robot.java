@@ -27,7 +27,7 @@ public class Robot extends IterativeRobot {
         WaypointSequence p = new WaypointSequence(10);
         p.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
         //p.addWaypoint(new WaypointSequence.Waypoint(5, 7.0, 0));
-        p.addWaypoint(new WaypointSequence.Waypoint(10.0, 0.0, 0));
+        p.addWaypoint(new WaypointSequence.Waypoint(50.0, 0.0, 0));
 
         Path path = PathGenerator.makePath(p, config,
             kWheelbaseWidth, "Corn Dogs");
@@ -53,7 +53,7 @@ public class Robot extends IterativeRobot {
 	int tick = 0;
 	@Override
 	public void teleopPeriodic() {
-		if (++tick >= 3) {
+		if (++tick >= 1) {
 			tick = 0;
 			t.displayValues();
 		}

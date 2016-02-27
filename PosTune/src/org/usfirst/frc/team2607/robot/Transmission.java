@@ -18,8 +18,9 @@ public class Transmission {
 
 		m =  new Talon(0);
 
-		pidLoop = new RobovikingModPIDController(0.007,0.0,0.0,0.067 / 2, enc, m);
+		pidLoop = new RobovikingModPIDController(0.01, 0.000, 0.0, 0.0151, 0.00121, enc, m);
 		pidLoop.setPositionInputRange(0, 7000.0);
+		pidLoop.setAccelerationInputRange(-20, 20);
 		pidLoop.setVelocityInputRange(-15.0, 15.0);
 	}
 	
@@ -27,8 +28,8 @@ public class Transmission {
 		pidLoop.enable();
 	}
 	
-	public void setVelSP(double pos, double vel) {
-		pidLoop.setSetpoint(pos, vel);
+	public void setVelSP(double pos, double vel, double acc) {
+		pidLoop.setSetpoint(pos, vel, acc);
 	}
 	
 	public void disableVelPID() {
@@ -36,7 +37,9 @@ public class Transmission {
 	}
 	
 	public void displayValues() {
-		System.out.println("SP POS: " + pidLoop.getSetpoint()[0] + " SP VEL: " + pidLoop.getSetpoint()[1] + 
-				" REAL POS: " + enc.getDistance() + " REAL VEL: " + enc.getRate());
+		//System.out.println("SP POS: " + pidLoop.getSetpoint()[0] + " SP VEL: " + pidLoop.getSetpoint()[1] + 
+			//	" REAL POS: " + enc.getDistance() + " REAL VEL: " + enc.getRate());
+		System.out.println(pidLoop.getSetpoint()[0] + "," + enc.getDistance() + "," +
+				pidLoop.getSetpoint()[1] + "," + enc.getRate());
 	}
 }

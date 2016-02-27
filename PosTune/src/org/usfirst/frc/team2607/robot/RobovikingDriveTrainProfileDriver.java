@@ -39,9 +39,10 @@ public class RobovikingDriveTrainProfileDriver {
 	    	step = (System.currentTimeMillis() - startTime) / (long)(dtSeconds * 1000);
 	    	try {
 	    		double pos = leftVelPts.get((int)step).pos,
+	    				acc = leftVelPts.get((int)step).acc,
 	    				vel = leftVelPts.get((int)step).vel;
-	    		System.out.println("Step: " + step + " left SP: " + pos + ", " + vel);
-	    		leftMotors.setVelSP(pos,vel);
+	    		//System.out.println("Step: " + step + " left SP: " + pos + ", " + vel + ", " + acc);
+	    		leftMotors.setVelSP(pos,vel, acc);
 	    		
 	    	} catch (Exception e) {
 	    		pointExecutor.stop();
