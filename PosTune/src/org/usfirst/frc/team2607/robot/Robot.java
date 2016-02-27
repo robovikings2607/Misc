@@ -13,6 +13,7 @@ import com.team254.lib.trajectory.io.TextFileDeserializer;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 
 public class Robot extends IterativeRobot {
@@ -20,11 +21,13 @@ public class Robot extends IterativeRobot {
 	public Transmission t;
 	private RobovikingDriveTrainProfileDriver mp;
 	private PIDLogger log;
+	private Joystick stick;
+	
 	@Override
 	public void robotInit() {
 		t = new Transmission();
 		Path path = null;
-		
+		stick = new Joystick(0);
 		// generate path here in the robot program
 //        path = generatePathOnTheFly();
 //		mp = new RobovikingDriveTrainProfileDriver(t, path);
@@ -83,10 +86,15 @@ public class Robot extends IterativeRobot {
 	int tick = 0;
 	@Override
 	public void teleopPeriodic() {
-		if (++tick >= 1) {
-			tick = 0;
-			t.displayValues();
+		if (stick.getRawButton(2)) {
+			stick.setRumble(Joystick.RumbleType.kLeftRumble, 1);
+			stick.setRumble(Joystick.RumbleType.kRightRumble, 1);
+		} else {
+			stick.setRumble(Joystick.RumbleType.kLeftRumble, 0);
+			stick.setRumble(Joystick.RumbleType.kRightRumble, 0);
+		
 		}
+			
 	}
 	
 	
