@@ -1,10 +1,14 @@
 package org.usfirst.frc.team2607.robot;
 
 import java.util.TimerTask;
+
+import com.team254.lib.trajectory.Trajectory.Segment;
+
 import java.util.ArrayDeque;
 import java.util.Queue;
 
 import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
 import edu.wpi.first.wpilibj.tables.ITable;
 import edu.wpi.first.wpilibj.tables.ITableListener;
@@ -19,22 +23,29 @@ import edu.wpi.first.wpilibj.util.BoundaryException;
 public class RobovikingModPIDController implements LiveWindowSendable {
 
   public static final double kDefaultPeriod = .05;
+  public static final boolean kTurnLeft = false;
+  public static final boolean kTurnRight = true;
   private static int instances = 0;
   private double m_P; // factor for "proportional" control
   private double m_I; // factor for "integral" control
   private double m_D; // factor for "derivative" control
   private double m_V; // factor for velocity feedforward term
   private double m_A; // factor for acceleration feedforward term
+  private double m_Turn; //factor for turning feedback control
   private double m_maximumOutput = 1.0; // |maximum output|
   private double m_minimumOutput = -1.0; // |minimum output|
   private double m_maximumInput_pos = 0.0; // maximum input - limit pos setpoint to this
   private double m_minimumInput_pos = 0.0; // minimum input - limit pos setpoint to this
   private double m_maximumInput_vel = 0.0; // maximum input - limit vel setpoint to this
   private double m_minimumInput_vel = 0.0; // minimum input - limit vel setpoint to this
-  private double m_maximumInput_acc = 0.0; // maximum input - limit vel setpoint to this
-  private double m_minimumInput_acc = 0.0; // minimum input - limit vel setpoint to this
+  private double m_maximumInput_acc = 0.0; // maximum input - limit acc setpoint to this
+  private double m_minimumInput_acc = 0.0; // minimum input - limit acc setpoint to this
+  private double m_maximumInput_ang = 0.0; // maximum input - limit angle setpoint to this
+  private double m_minimumInput_ang = 0.0; // minimum input - limit angle setpoint to this
   private boolean m_continuous = false; // do the endpoints wrap around? eg.
                                         // Absolute encoder
+  private boolean m_turnDirection = false; //for Gyro
+  									//False = Left | True = Right
   private boolean m_enabled = false; // is the pid controller enabled
   private double m_prevError = 0.0; // the prior error (used to compute
                                     // velocity)
@@ -48,12 +59,14 @@ public class RobovikingModPIDController implements LiveWindowSendable {
   private double m_setpoint_pos = 0.0;
   private double m_setpoint_vel = 0.0;
   private double m_setpoint_acc = 0.0;
+  private double m_setpoint_ang = 0.0;
   private double m_prevSetpoint_pos = 0.0;
   private double m_error = 0.0;
   private double m_result = 0.0;
   private double m_period = kDefaultPeriod;
   protected PIDSource m_pidInput;
   protected PIDOutput m_pidOutput;
+  protected Gyro m_Gyro;
   java.util.Timer m_controlLoop;
   Timer m_setpointTimer;
   private boolean m_freed = false;
@@ -226,10 +239,12 @@ public class RobovikingModPIDController implements LiveWindowSendable {
    * @param source The PIDSource object that is used to get values
    * @param output The PIDOutput object that is set to the output percentage
    */
-  public RobovikingModPIDController(double Kp, double Ki, double Kd, double Kf, double ka, PIDSource source,
-      PIDOutput output) {
+  public RobovikingModPIDController(double Kp, double Ki, double Kd, double Kf, double Ka, double KTurn, PIDSource source,
+      PIDOutput output, Gyro g) {
     this(Kp, Ki, Kd, Kf, source, output, kDefaultPeriod);
-    m_A = ka;
+    m_A = Ka;
+    m_Turn = KTurn;
+    m_Gyro = g;
   }
 
   /**
@@ -301,7 +316,7 @@ public class RobovikingModPIDController implements LiveWindowSendable {
             }
 
             m_result = m_P * m_totalError + m_D * m_error +
-                       calculateFeedForward();
+                       calculateFeedForward() + calculateTurn();
           }
         }
         else {
@@ -320,7 +335,7 @@ public class RobovikingModPIDController implements LiveWindowSendable {
           }
 
           m_result = m_P * m_error + m_I * m_totalError +
-                     m_D * (m_error - m_prevError) + calculateFeedForward();
+                     m_D * (m_error - m_prevError) + calculateFeedForward() + calculateTurn();
         }
         m_prevError = m_error;
 
@@ -345,7 +360,7 @@ public class RobovikingModPIDController implements LiveWindowSendable {
     }
   }
 
-  /**
+/**
    * Calculate the feed forward term
    *
    * Both of the provided feed forward calculations are velocity feed forwards.
@@ -362,6 +377,20 @@ public class RobovikingModPIDController implements LiveWindowSendable {
    */
   protected double calculateFeedForward() {
       return m_V * m_setpoint_vel + m_A * m_setpoint_acc;
+  }
+  
+  /**
+   * Calculate the heading correction term
+   *
+   * This term adds a correction factor to the PID equation to correct for the robot's
+   * heading versus the requested heading. m_turnDirection is used to set the
+   * polarity on the returned value (add to one robot side, subtract from the other
+   * in order to cause the robot to turn).
+   */
+  protected double calculateTurn() {
+	double angError = m_setpoint_ang - (m_Gyro.getAngle() * (Math.PI / 180.0)); //Profile setpoint is in radians
+			
+	return m_Turn * angError * (m_turnDirection ? 1 : -1);
   }
 
   /**
@@ -405,6 +434,20 @@ public class RobovikingModPIDController implements LiveWindowSendable {
       table.putNumber("d", d);
       table.putNumber("f", f);
     }
+  }
+  
+  public synchronized void setKTurn(double kTurn){
+	  m_Turn = kTurn;
+  }
+  
+  /**
+   * Set the direction that the kTurn of the pidLoop will act in. This must be opposite for
+   * each side of the drive train to act property.
+   *
+   * @param direction Direction that kTurn acts in (False = Left | True = Right)
+   */
+  public synchronized void setTurnDirection(boolean direction){
+	  m_turnDirection = direction;
   }
 
   /**
@@ -495,7 +538,7 @@ public class RobovikingModPIDController implements LiveWindowSendable {
     }
     m_minimumInput_pos = minimumInput;
     m_maximumInput_pos = maximumInput;
-    setSetpoint(m_setpoint_pos, m_setpoint_vel, m_setpoint_acc);
+    setSetpoint(m_setpoint_pos, m_setpoint_vel, m_setpoint_acc, m_setpoint_ang);
   }
   
   /**
@@ -510,7 +553,7 @@ public class RobovikingModPIDController implements LiveWindowSendable {
     }
     m_minimumInput_vel = minimumInput;
     m_maximumInput_vel = maximumInput;
-    setSetpoint(m_setpoint_pos, m_setpoint_vel, m_setpoint_acc);
+    setSetpoint(m_setpoint_pos, m_setpoint_vel, m_setpoint_acc, m_setpoint_ang);
   }
   
   /**
@@ -525,7 +568,22 @@ public class RobovikingModPIDController implements LiveWindowSendable {
     }
     m_minimumInput_acc = minimumInput;
     m_maximumInput_acc = maximumInput;
-    setSetpoint(m_setpoint_pos, m_setpoint_vel, m_setpoint_acc);
+    setSetpoint(m_setpoint_pos, m_setpoint_vel, m_setpoint_acc, m_setpoint_ang);
+  }
+  
+  /**
+   * Sets the maximum and minimum values expected from the input and setpoint.
+   *
+   * @param minimumInput the minimum value expected from the input
+   * @param maximumInput the maximum value expected from the input
+   */
+  public synchronized void setHeadingInputRange(double minimumInput, double maximumInput) {
+    if (minimumInput > maximumInput) {
+      throw new BoundaryException("Lower bound is greater than upper bound");
+    }
+    m_minimumInput_ang = minimumInput;
+    m_maximumInput_ang = maximumInput;
+    setSetpoint(m_setpoint_pos, m_setpoint_vel, m_setpoint_acc, m_setpoint_ang);
   }
 
   /**
@@ -548,7 +606,7 @@ public class RobovikingModPIDController implements LiveWindowSendable {
    *$
    * @param setpoint_pos the desired setpoint
    */
-  public synchronized void setSetpoint(double setpoint_pos, double setpoint_vel, double setpoint_acc) {
+  public synchronized void setSetpoint(double setpoint_pos, double setpoint_vel, double setpoint_acc, double setpoint_ang) {
     if (m_maximumInput_pos > m_minimumInput_pos) {
       if (setpoint_pos > m_maximumInput_pos) {
         m_setpoint_pos = m_maximumInput_pos;
@@ -585,10 +643,26 @@ public class RobovikingModPIDController implements LiveWindowSendable {
         m_setpoint_acc = setpoint_acc;
       }
     
+    if (m_maximumInput_ang > m_minimumInput_ang) {
+        if (setpoint_ang > m_maximumInput_ang) {
+          m_setpoint_ang = m_maximumInput_ang;
+        } else if (setpoint_ang < m_minimumInput_ang) {
+          m_setpoint_ang = m_minimumInput_ang;
+        } else {
+          m_setpoint_ang = setpoint_ang;
+        }
+      } else {
+        m_setpoint_ang = setpoint_ang;
+      }
+
     m_buf.clear();
 
     if (table != null)
       table.putNumber("setpoint", m_setpoint_pos);
+  }
+  
+  public void setSetpoint(Segment s){
+	  setSetpoint(s.pos, s.vel, s.acc, s.heading);
   }
 
   /**
@@ -597,7 +671,7 @@ public class RobovikingModPIDController implements LiveWindowSendable {
    * @return the current setpoint
    */
   public synchronized double[] getSetpoint() {
-    return new double[] {m_setpoint_pos, m_setpoint_vel, m_setpoint_acc};
+    return new double[] {m_setpoint_pos, m_setpoint_vel, m_setpoint_acc, m_setpoint_ang};
   }
 
   /**

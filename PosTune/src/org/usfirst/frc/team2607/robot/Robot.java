@@ -25,7 +25,7 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void robotInit() {
-		t = new Transmission();
+		t = new Transmission(false);
 		Path path = null;
 		stick = new Joystick(0);
 		// generate path here in the robot program
@@ -46,8 +46,9 @@ public class Robot extends IterativeRobot {
 		mp = new RobovikingDriveTrainProfileDriver(t, path);
 		
 		log = new PIDLogger(this);
+		
+		log.start();
 	}
-
 	private Path generatePathOnTheFly() {
     	TrajectoryGenerator.Config config = new TrajectoryGenerator.Config();
         config.dt = .01;
@@ -64,6 +65,8 @@ public class Robot extends IterativeRobot {
 
         return PathGenerator.makePath(p, config,
             kWheelbaseWidth, "Corn Dogs");
+        
+        
 
 	}
 	
@@ -74,7 +77,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopInit() {
 		mp.followPath();
-		log.start();
+		
 		log.enableLogging(true);
 	}
 
@@ -95,6 +98,7 @@ public class Robot extends IterativeRobot {
 		
 		}
 			
+		t.displayValues();
 	}
 	
 	
