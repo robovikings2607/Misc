@@ -20,26 +20,26 @@ import com.team254.lib.trajectory.io.TextFileDeserializer;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Talon;
 
 public class Robot extends IterativeRobot {
 
 	public Transmission t;
 	private RobovikingDriveTrainProfileDriver mp;
-	private PIDLogger log;
 	private Joystick stick;
 	
 	@Override
 	public void robotInit() {
 		{ //Server for PID Log Code
-			Server server = new Server(5800);
+			Server server = new Server(5801);
 	        ServerConnector connector = new ServerConnector(server);
-	        connector.setPort(5800);
+	        connector.setPort(5801);
 	        server.addConnector(connector);
 	
 	        ResourceHandler resource_handler = new ResourceHandler();
 	        resource_handler.setDirectoriesListed(true);
 	        resource_handler.setWelcomeFiles(new String[]{ "/home/lvuser/index.html" });
-	
+
 	        resource_handler.setResourceBase(".");
 	        
 	        HandlerList handlers = new HandlerList();
@@ -55,7 +55,8 @@ public class Robot extends IterativeRobot {
 		}
         
 		
-		t = new Transmission(false);
+		t = new Transmission(new Talon(0), RobovikingModPIDController.kTurnLeft);
+		t.setName("Left");
 		Path path = null;
 		stick = new Joystick(0);
 		// generate path here in the robot program
@@ -74,10 +75,6 @@ public class Robot extends IterativeRobot {
 		}
 		
 		mp = new RobovikingDriveTrainProfileDriver(t, path);
-		
-		log = new PIDLogger(this);
-		
-		log.start();
 	}
 	private Path generatePathOnTheFly() {
     	TrajectoryGenerator.Config config = new TrajectoryGenerator.Config();
@@ -108,12 +105,12 @@ public class Robot extends IterativeRobot {
 	public void teleopInit() {
 		mp.followPath();
 		
-		log.enableLogging(true);
+		t.log.enableLogging(true);
 	}
 
 	@Override
 	public void disabledPeriodic() {
-		log.enableLogging(false);
+		t.log.enableLogging(false);
 	}
 
 	int tick = 0;

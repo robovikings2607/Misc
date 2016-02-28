@@ -13,24 +13,32 @@ public class Transmission {
 	public RobovikingModPIDController pidLoop;
 	public Encoder enc;
 	public ADXRS450_Gyro gyro;
+	public PIDLogger log;
+	private String name;
 	
-	public Transmission(boolean side) {
+	public Transmission(Talon tal, boolean side) {
 		gyro = new ADXRS450_Gyro();
 		gyro.calibrate();
 		
 		enc = new Encoder(0 , 1 , false, Encoder.EncodingType.k1X);
 		enc.setPIDSourceType(PIDSourceType.kDisplacement);
 		enc.reset();
-		enc.setDistancePerPulse(0.00766990393942820614859043794746);	// ((Wheel Di. (in) / 12) * pi) / enc counts
+		enc.setDistancePerPulse(0.004);	// ((Wheel Di. (in) / 12) * pi) / enc counts
+		//0.00766990393942820614859043794746
 
-		m =  new Talon(0);
+		m =  tal;
 
-		pidLoop = new RobovikingModPIDController(0.05, 0.001, 0.0, 0.0151, 0.00121, -3.0/80.0, enc, m, gyro);
+		pidLoop = new RobovikingModPIDController(0.5, 0.001, 0.00001, .0335, .0025, 0, enc, m, gyro);
+		//0.14, 0.001, 0.0, 0.0151, 0.0022, -3.0/80.0, enc, m, gyro
 		pidLoop.setTurnDirection(side);
 		pidLoop.setPositionInputRange(0, 7000.0);
 		pidLoop.setAccelerationInputRange(-20, 20);
 		pidLoop.setVelocityInputRange(-15.0, 15.0);
 		pidLoop.setHeadingInputRange(-360, 360);
+		
+		log = new PIDLogger(this);
+		
+		log.start();
 	}
 	
 	public void enableVelPID() {
@@ -47,6 +55,14 @@ public class Transmission {
 	
 	public void disableVelPID() {
 		pidLoop.disable();
+	}
+	
+	public void setName(String n){
+		name = n;
+	}
+	
+	public String getName(){
+		return name;
 	}
 	
 	public void displayValues() {

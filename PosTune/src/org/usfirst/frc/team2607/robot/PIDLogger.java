@@ -11,7 +11,7 @@ public class PIDLogger extends Thread {
 	private boolean loggingEnabled = false;
 	String deviceName;
 	
-	Robot theBot;
+	Transmission theTrans;
 	
 	
 	@Override
@@ -23,8 +23,8 @@ public class PIDLogger extends Thread {
 		
 	}
 	
-	public PIDLogger(Robot robot){
-		theBot = robot;					
+	public PIDLogger(Transmission t){
+		theTrans = t;					
 	}
 	
 	 public void enableLogging(boolean enable) {
@@ -38,7 +38,7 @@ public class PIDLogger extends Thread {
 	    		try {
 	    			String s = "/home/lvuser/" + "TuneFiles" + "." + System.currentTimeMillis() + ".csv";
 	    			logFile = new PrintWriter(new File(s));
-	    			String t = "/home/lvuser/" + "TuneFile" + ".csv";
+	    			String t = "/home/lvuser/" + "TuneFile" + "_" + theTrans.getName() + ".csv";
 	    			sameNameLogFile = new PrintWriter(new File(t));
 	    			sameNameLogFile.println("Time,SetPos,RealPos,SetVel,RealVel,SetHead,RealHead,Error,PCon,ICon,DCon,VCon,ACon");
 	    			logFile.println("Time,SetPos,RealPos,SetVel,RealVel,SetHead,RealHead,Error,PCon,ICon,DCon,VCon,ACon");
@@ -60,32 +60,32 @@ public class PIDLogger extends Thread {
 	 public void logEntry() {
 	        if (loggingEnabled) {
 	        	logFile.println(System.currentTimeMillis() + "," +
-	        					theBot.t.pidLoop.getSetpoint()[0] + "," + 
-	        					theBot.t.enc.getDistance() + "," +
-	        				    theBot.t.pidLoop.getSetpoint()[1] + "," + 
-	        					theBot.t.enc.getRate() + "," + 
-	        				    theBot.t.pidLoop.getSetpoint()[3] + "," +
-	        				    (theBot.t.gyro.getAngle() * (Math.PI/180.0)) + "," +
-	        				    theBot.t.pidLoop.getError() + "," +
-	        				    (theBot.t.pidLoop.getError() * theBot.t.pidLoop.getP()) + "," +
-	        				    (theBot.t.pidLoop.getError() * theBot.t.pidLoop.getI()) + "," +
-	        				    (theBot.t.pidLoop.getError() * theBot.t.pidLoop.getD()) + "," +
-	        				    (theBot.t.pidLoop.getSetpoint()[1] * theBot.t.pidLoop.getV()) + "," +
-	        				    (theBot.t.pidLoop.getSetpoint()[2] * theBot.t.pidLoop.getA()));
+	        					theTrans.pidLoop.getSetpoint()[0] + "," + 
+	        					theTrans.enc.getDistance() + "," +
+	        				    theTrans.pidLoop.getSetpoint()[1] + "," + 
+	        					theTrans.enc.getRate() + "," + 
+	        				    theTrans.pidLoop.getSetpoint()[3] + "," +
+	        				    (theTrans.gyro.getAngle() * (Math.PI/180.0)) + "," +
+	        				    theTrans.pidLoop.getError() + "," +
+	        				    (theTrans.pidLoop.getError() * theTrans.pidLoop.getP()) + "," +
+	        				    (theTrans.pidLoop.getError() * theTrans.pidLoop.getI()) + "," +
+	        				    (theTrans.pidLoop.getError() * theTrans.pidLoop.getD()) + "," +
+	        				    (theTrans.pidLoop.getSetpoint()[1] * theTrans.pidLoop.getV()) + "," +
+	        				    (theTrans.pidLoop.getSetpoint()[2] * theTrans.pidLoop.getA()));
 	        	logFile.flush();
 	        	sameNameLogFile.println(System.currentTimeMillis() + "," +
-    					theBot.t.pidLoop.getSetpoint()[0] + "," + 
-    					theBot.t.enc.getDistance() + "," +
-    				    theBot.t.pidLoop.getSetpoint()[1] + "," + 
-    					theBot.t.enc.getRate() + "," + 
-    				    theBot.t.pidLoop.getSetpoint()[3] + "," +
-    				    (theBot.t.gyro.getAngle() * (Math.PI/180.0)) + "," +
-    				    theBot.t.pidLoop.getError() + "," +
-    				    (theBot.t.pidLoop.getError() * theBot.t.pidLoop.getP()) + "," +
-    				    (theBot.t.pidLoop.getError() * theBot.t.pidLoop.getI()) + "," +
-    				    (theBot.t.pidLoop.getError() * theBot.t.pidLoop.getD()) + "," +
-    				    (theBot.t.pidLoop.getSetpoint()[1] * theBot.t.pidLoop.getV()) + "," +
-    				    (theBot.t.pidLoop.getSetpoint()[2] * theBot.t.pidLoop.getA()));
+    					theTrans.pidLoop.getSetpoint()[0] + "," + 
+    					theTrans.enc.getDistance() + "," +
+    				    theTrans.pidLoop.getSetpoint()[1] + "," + 
+    					theTrans.enc.getRate() + "," + 
+    				    theTrans.pidLoop.getSetpoint()[3] + "," +
+    				    (theTrans.gyro.getAngle() * (Math.PI/180.0)) + "," +
+    				    theTrans.pidLoop.getError() + "," +
+    				    (theTrans.pidLoop.getError() * theTrans.pidLoop.getP()) + "," +
+    				    (theTrans.pidLoop.getError() * theTrans.pidLoop.getI()) + "," +
+    				    (theTrans.pidLoop.getError() * theTrans.pidLoop.getD()) + "," +
+    				    (theTrans.pidLoop.getSetpoint()[1] * theTrans.pidLoop.getV()) + "," +
+    				    (theTrans.pidLoop.getSetpoint()[2] * theTrans.pidLoop.getA()));
 	        	sameNameLogFile.flush();
 	        }
 	    }
