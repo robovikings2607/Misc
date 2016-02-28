@@ -5,16 +5,21 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.Scanner;
 
+import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.handler.DefaultHandler;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.ResourceHandler;
+
 import com.team254.lib.trajectory.Path;
 import com.team254.lib.trajectory.PathGenerator;
 import com.team254.lib.trajectory.TrajectoryGenerator;
 import com.team254.lib.trajectory.WaypointSequence;
 import com.team254.lib.trajectory.io.TextFileDeserializer;
 
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Talon;
 
 public class Robot extends IterativeRobot {
 
@@ -25,6 +30,31 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void robotInit() {
+		{ //Server for PID Log Code
+			Server server = new Server(5800);
+	        ServerConnector connector = new ServerConnector(server);
+	        connector.setPort(5800);
+	        server.addConnector(connector);
+	
+	        ResourceHandler resource_handler = new ResourceHandler();
+	        resource_handler.setDirectoriesListed(true);
+	        resource_handler.setWelcomeFiles(new String[]{ "/home/lvuser/index.html" });
+	
+	        resource_handler.setResourceBase(".");
+	        
+	        HandlerList handlers = new HandlerList();
+	        handlers.setHandlers(new Handler[] { resource_handler, new DefaultHandler() });
+	        server.setHandler(handlers);
+	        try {
+				server.start();
+				server.join();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+        
+		
 		t = new Transmission(false);
 		Path path = null;
 		stick = new Joystick(0);
