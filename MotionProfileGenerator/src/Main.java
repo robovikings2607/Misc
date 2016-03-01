@@ -19,16 +19,18 @@ public class Main {
 		
     	TrajectoryGenerator.Config config = new TrajectoryGenerator.Config();
         config.dt = .01;
-        config.max_acc = 8.0;
+        config.max_acc = 6.0;
         config.max_jerk = 60.0;
-        config.max_vel = 8.0;
+        config.max_vel = 7.0;
         
         final double kWheelbaseWidth = 25.25/12;
 
         WaypointSequence p = new WaypointSequence(10);
         p.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
         //p.addWaypoint(new WaypointSequence.Waypoint(5, 7.0, 0));
-        p.addWaypoint(new WaypointSequence.Waypoint(50.0, 0.0, 0));
+        p.addWaypoint(new WaypointSequence.Waypoint(7.0, 0.0, 0));
+        p.addWaypoint(new WaypointSequence.Waypoint(9.5, -5.0, Math.PI / -8.0));
+        p.addWaypoint(new WaypointSequence.Waypoint(12.5, -6.5, 0.0));
 
         Path path = PathGenerator.makePath(p, config,
             kWheelbaseWidth, "Corn Dogs");
@@ -37,7 +39,7 @@ public class Main {
         String traj = tfs.serialize(path);
 
         try {
-        	FileWriter f = new FileWriter(new File("testTrajctory.txt"));
+        	FileWriter f = new FileWriter(new File("testCompoundProfile.txt"));
         	f.write(traj);
         	f.flush();
         	f.close();
