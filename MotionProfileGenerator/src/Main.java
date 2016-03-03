@@ -21,7 +21,7 @@ public class Main {
         config.dt = .01;
         config.max_acc = 5.0;
         config.max_jerk = 30.0;
-        config.max_vel = 7.0;
+        config.max_vel = 3;
         
         final double kWheelbaseWidth = 25.25/12;
 
@@ -29,7 +29,7 @@ public class Main {
         p.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
         //p.addWaypoint(new WaypointSequence.Waypoint(5, 7.0, 0));
         p.addWaypoint(new WaypointSequence.Waypoint(-8, 0.0, 0));
-        p.addWaypoint(new WaypointSequence.Waypoint(-16, 2, Math.PI / -4));
+        p.addWaypoint(new WaypointSequence.Waypoint(-18, -2, Math.PI / 4));
         //p.addWaypoint(new WaypointSequence.Waypoint(15.5, -10.5, 0.0));
 
         Path path = PathGenerator.makePath(p, config,
