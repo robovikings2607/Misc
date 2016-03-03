@@ -28,10 +28,8 @@ public class Main {
         WaypointSequence p = new WaypointSequence(10);
         p.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
         //p.addWaypoint(new WaypointSequence.Waypoint(5, 7.0, 0));
-        p.addWaypoint(new WaypointSequence.Waypoint(4.9, 0.0, 0));
-        p.addWaypoint(new WaypointSequence.Waypoint(5.0, 0.05, Math.PI / 4));
-        p.addWaypoint(new WaypointSequence.Waypoint(5.0, 0.1, Math.PI / 2.1));
-        p.addWaypoint(new WaypointSequence.Waypoint(5.0, 10, Math.PI / 2.1));
+        p.addWaypoint(new WaypointSequence.Waypoint(-8, 0.0, 0));
+        p.addWaypoint(new WaypointSequence.Waypoint(-16, 2, Math.PI / -4));
         //p.addWaypoint(new WaypointSequence.Waypoint(15.5, -10.5, 0.0));
 
         Path path = PathGenerator.makePath(p, config,
@@ -41,7 +39,7 @@ public class Main {
         String traj = tfs.serialize(path);
 
         try {
-        	FileWriter f = new FileWriter(new File("testCompoundProfile.txt"));
+        	FileWriter f = new FileWriter(new File("breachLowBarAndShoot.txt"));
         	f.write(traj);
         	f.flush();
         	f.close();
