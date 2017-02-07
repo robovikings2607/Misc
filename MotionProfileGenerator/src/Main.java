@@ -19,18 +19,19 @@ public class Main {
 		
     	TrajectoryGenerator.Config config = new TrajectoryGenerator.Config();
         config.dt = .01;
-        config.max_acc = 5.0;
+        config.max_acc = 2.0;
         config.max_jerk = 30.0;
-        config.max_vel = 3;
+        config.max_vel = 5.0;
         
-        final double kWheelbaseWidth = 25.25/12;
+        final double fudgeFactor = 1.90;
+        
+        final double kWheelbaseWidth = 25.75/12.0 * 7.072;
 
         WaypointSequence p = new WaypointSequence(10);
-        p.addWaypoint(new WaypointSequence.Waypoint(0, 0, 0));
-        //p.addWaypoint(new WaypointSequence.Waypoint(5, 7.0, 0));
-        p.addWaypoint(new WaypointSequence.Waypoint(-8, 0.0, 0));
-        p.addWaypoint(new WaypointSequence.Waypoint(-18, -2, Math.PI / 4));
-        //p.addWaypoint(new WaypointSequence.Waypoint(15.5, -10.5, 0.0));
+        p.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
+        //p.addWaypoint(new WaypointSequence.Waypoint(6.0 * fudgeFactor , -6.0 * fudgeFactor, 0.0));
+        p.addWaypoint(new WaypointSequence.Waypoint(12.0 * fudgeFactor, -3.0 * fudgeFactor, 0.2618));
+        
 
         Path path = PathGenerator.makePath(p, config,
             kWheelbaseWidth, "Corn Dogs");
@@ -39,13 +40,14 @@ public class Main {
         String traj = tfs.serialize(path);
 
         try {
-        	FileWriter f = new FileWriter(new File("breachLowBarAndShoot.txt"));
+        	FileWriter f = new FileWriter(new File("autonStraight12ftx3ft.txt"));
         	f.write(traj);
         	f.flush();
         	f.close();
         } catch (Exception e) {
         	e.printStackTrace();
         }
+        System.out.println("Success!");
 	}
 
 }
