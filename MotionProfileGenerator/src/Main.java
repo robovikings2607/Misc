@@ -30,7 +30,8 @@ public class Main {
         WaypointSequence p = new WaypointSequence(10);
         p.addWaypoint(new WaypointSequence.Waypoint(0.0, 0.0, 0.0));
         //p.addWaypoint(new WaypointSequence.Waypoint(6.0 * fudgeFactor , -6.0 * fudgeFactor, 0.0));
-        p.addWaypoint(new WaypointSequence.Waypoint(12.0 * fudgeFactor, -3.0 * fudgeFactor, 0.2618));
+        p.addWaypoint(new WaypointSequence.Waypoint(7.0 * fudgeFactor, 0.0 * fudgeFactor, 0.0));
+        p.addWaypoint(new WaypointSequence.Waypoint(7.83 * fudgeFactor, 1.75 * fudgeFactor, 0.524));
         
 
         Path path = PathGenerator.makePath(p, config,
@@ -40,7 +41,7 @@ public class Main {
         String traj = tfs.serialize(path);
 
         try {
-        	FileWriter f = new FileWriter(new File("autonStraight12ftx3ft.txt"));
+        	FileWriter f = new FileWriter(new File("rightPeg.txt"));
         	f.write(traj);
         	f.flush();
         	f.close();
