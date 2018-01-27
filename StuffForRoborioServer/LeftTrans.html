@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>chart created with amCharts | amCharts</title>
+		<meta name="description" content="chart created using amCharts live editor" />
+
+		<!-- amCharts javascript sources -->
+		<script type="text/javascript" src="http://roborio-2607-frc.local:5801/home/lvuser/amcharts/lib/3/amcharts.js"></script>
+		<script type="text/javascript" src="http://roborio-2607-frc.local:5801/home/lvuser/amcharts/lib/3/xy.js"></script>
+		<script type="text/javascript" src="http://roborio-2607-frc.local:5801/home/lvuser/amcharts/plugins/dataloader/dataloader.min.js"></script>
+
+
+	<!-- amCharts javascript code -->
+		<script type="text/javascript">
+			AmCharts.makeChart("PosChart",
+				{
+					"type": "xy",
+					"startDuration": 0.25,
+					"trendLines": [],
+					"graphs": [
+						{
+							"balloonText": "x:<b>[[x]]</b> y:<b>[[y]]</b>",
+							"bullet": "round",
+							"bulletAlpha": 0,
+							"id": "AmGraph-1",
+							"lineColor": "#b0de09",
+							"xField": "Time",
+							"yField": "RealPos"
+						},
+						{
+							"balloonText": "x:<b>[[x]]</b> y:<b>[[y]]</b>",
+							"bullet": "round",
+							"bulletAlpha": 0,
+							"id": "AmGraph-2",
+							"lineColor": "#fcd202",
+							"xField": "Time",
+							"yField": "SetPos"
+						}
+					],
+					"guides": [],
+					"valueAxes": [
+						{
+							"id": "ValueAxis-1",
+							"axisAlpha": 0,
+							"title" : "Position"
+						},
+						{
+							"id": "ValueAxis-2",
+							"position": "bottom",
+							"axisAlpha": 0,
+							"title" : "Time"
+						}
+					],
+					"allLabels": [],
+					"balloon": {},
+					"titles": [],
+			        "dataLoader": {
+				        "url": "http://roborio-2607-frc.local:5801/home/lvuser/TuneFile_Left.csv",
+				        "format": "csv",
+				        "showCurtain": true,
+				        "showErrors": true,
+				        "async": true,
+				        "reverse": true,
+				        "delimiter": ",",
+				        "useColumnNames": true,
+				        "skip" : 1
+			      }				
+			  }
+			);
+			
+			AmCharts.makeChart("VelChart",
+				{
+					"type": "xy",
+					"startDuration": 0.25,
+					"trendLines": [],
+					"graphs": [
+						{
+							"balloonText": "x:<b>[[x]]</b> y:<b>[[y]]</b>",
+							"bullet": "round",
+							"bulletAlpha": 0,
+							"id": "AmGraph-1",
+							"lineColor": "#b0de09",
+							"xField": "Time",
+							"yField": "RealVel"
+						},
+						{
+							"balloonText": "x:<b>[[x]]</b> y:<b>[[y]]</b>",
+							"bullet": "round",
+							"bulletAlpha": 0,
+							"id": "AmGraph-2",
+							"lineColor": "#fcd202",
+							"xField": "Time",
+							"yField": "SetVel"
+						}
+					],
+					"guides": [],
+					"valueAxes": [
+						{
+							"id": "ValueAxis-1",
+							"axisAlpha": 0,
+							"title" : "Velocity"
+						},
+						{
+							"id": "ValueAxis-2",
+							"position": "bottom",
+							"axisAlpha": 0,
+							"title" : "Time"
+						}
+					],
+					"allLabels": [],
+					"balloon": {},
+					"titles": [],
+			        "dataLoader": {
+				        "url": "http://roborio-2607-frc.local:5801/home/lvuser/TuneFile_Left.csv",
+				        "format": "csv",
+				        "showCurtain": true,
+				        "showErrors": true,
+				        "async": true,
+				        "reverse": true,
+				        "delimiter": ",",
+				        "useColumnNames": true,
+				        "skip" : 1
+			      }				
+			  }
+			)
+		</script>
+	</head>
+	<body>
+		<div id="PosChart" style="width: 100%; height: 400px; background-color: #FFFFFF;" ></div>
+		<div id="VelChart" style="width: 100%; height: 400px; background-color: #FFFFFF;" ></div>
+		
+	</body>
+</html>

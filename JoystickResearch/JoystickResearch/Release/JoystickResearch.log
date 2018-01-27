@@ -1,0 +1,22 @@
+﻿Build started 2/6/2011 6:45:56 PM.
+     1>Project "C:\Users\Ron\Documents\Visual Studio 2010\Projects\JoystickResearch\JoystickResearch\JoystickResearch.vcxproj" on node 2 (rebuild target(s)).
+     1>PrepareForBuild:
+         Creating directory "C:\Users\Ron\Documents\Visual Studio 2010\Projects\JoystickResearch\Release\".
+       InitializeBuildStatus:
+         Creating "Release\JoystickResearch.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         C:\MSVisualStudio2010\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Joystick.cpp Main.cpp
+         Joystick.cpp
+         Main.cpp
+     1>Main.cpp(11): warning C4930: 'Joystick myJoystick(void)': prototyped function not called (was a variable definition intended?)
+       Link:
+         C:\MSVisualStudio2010\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Ron\Documents\Visual Studio 2010\Projects\JoystickResearch\Release\JoystickResearch.exe" /INCREMENTAL:NO /NOLOGO dxguid.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\JoystickResearch.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Ron\Documents\Visual Studio 2010\Projects\JoystickResearch\Release\JoystickResearch.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Ron\Documents\Visual Studio 2010\Projects\JoystickResearch\Release\JoystickResearch.lib" /MACHINE:X86 Release\Joystick.obj
+         Release\Main.obj
+     1>Joystick.obj : error LNK2001: unresolved external symbol _c_dfDIJoystick2
+     1>Joystick.obj : error LNK2001: unresolved external symbol _DirectInput8Create@20
+     1>C:\Users\Ron\Documents\Visual Studio 2010\Projects\JoystickResearch\Release\JoystickResearch.exe : fatal error LNK1120: 2 unresolved externals
+     1>Done Building Project "C:\Users\Ron\Documents\Visual Studio 2010\Projects\JoystickResearch\JoystickResearch\JoystickResearch.vcxproj" (rebuild target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:01.47
