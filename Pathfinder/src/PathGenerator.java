@@ -27,6 +27,10 @@ public class PathGenerator {
 				new Waypoint(40,17.75,Pathfinder.d2r(90)),
 				new Waypoint(40,242.0,Pathfinder.d2r(90))
 			};
+		
+		/*
+		 * 
+		 */
 
 			Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, 0.010, 20, 8.0, 20.0);
 			Trajectory trajectory = Pathfinder.generate(points, config);
