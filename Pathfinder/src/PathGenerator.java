@@ -29,7 +29,7 @@ public class PathGenerator {
 			};
 		
 		/*
-		 * 
+		 * a
 		 */
 
 			Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, 0.010, 20, 8.0, 20.0);
