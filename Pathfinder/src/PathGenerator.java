@@ -12,10 +12,10 @@ public class PathGenerator {
 	public static void main(String[] args) {
 		
 		Waypoint[] points = new Waypoint[] {
-			    /*  This is the routine for the left switch drop
-				new Waypoint(135.5,17.75,Pathfinder.d2r(90)),
-			    new Waypoint(105.5,122.25,Pathfinder.d2r(90))
-			    */
+			    /*  This is the routine for the left switch drop */
+				// new Waypoint(135.5,17.75,Pathfinder.d2r(90)),
+			    // new Waypoint(105.5,122.25,Pathfinder.d2r(90))
+			    
 				
 				// These are the coordinates for the right switch drop
 				
@@ -24,17 +24,24 @@ public class PathGenerator {
 				
 				// These are the left start point waypoints
 				
-				new Waypoint(40,17.75,Pathfinder.d2r(90)),
-				new Waypoint(40,242.0,Pathfinder.d2r(90))
+				//new Waypoint(40,17.75,Pathfinder.d2r(90)),
+				//new Waypoint(40,242.0,Pathfinder.d2r(90))
+				
+				// Test Points
+				
+				new Waypoint(40.0,17.75,Pathfinder.d2r(90)),
+				new Waypoint(40.0,47.75,Pathfinder.d2r(90))
+				
 			};
 		
 		/*
 		 * a
 		 */
 
-			Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, 0.010, 20, 8.0, 20.0);
+// config parameters: time interval, velocity, acceleration, and jerk as the last four parameters		
+			Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, 0.010, 144.0,150.0, 100.0);
 			Trajectory trajectory = Pathfinder.generate(points, config);
-			TankModifier modifier = new TankModifier(trajectory).modify(14);
+			TankModifier modifier = new TankModifier(trajectory).modify(28);
 			
 			Trajectory left  = modifier.getLeftTrajectory();       // Get the Left Side
 			Trajectory right = modifier.getRightTrajectory();      // Get the Right Side
@@ -44,7 +51,7 @@ public class PathGenerator {
 			
 			Trajectory.Segment leftseg = left.get(0);
 			Trajectory.Segment rightseg = right.get(0);
-			double ticksperinch = 30; // this is equal to (2 * pi * wheel radius in inches) / 1024
+			double ticksperinch = 178.583; // this is equal to (2 * pi * wheel radius in inches) / 1024
 			
 			System.out.printf("Left Length %d; Right Length %d; Robot Width Track %f\n",left.length(),right.length(),rightseg.x - leftseg.x);
 					
@@ -70,7 +77,7 @@ public class PathGenerator {
 			}
 			*/
 			
-			File myFile = new File("trajectory.csv");
+			File myFile = new File("C:\\Users\\Ramiro\\Documents\\Motion Profiling\\Testing\\trajectory.csv");
 			Pathfinder.writeToCSV(myFile, trajectory);		
 							
 			PrintWriter outfileleft_inch, outfileleft_ticks;
@@ -87,7 +94,7 @@ public class PathGenerator {
 				        seg.dt, seg.x, seg.y, seg.position, seg.velocity, 
 				            seg.acceleration, seg.jerk, seg.heading);
 				    
-				    outfileleft_ticks.printf("{%f,%f,10.0},\n",seg.position*ticksperinch,seg.velocity*ticksperinch/100);
+				    outfileleft_ticks.printf("{%f,%f,10},\n",seg.position*ticksperinch,seg.velocity*ticksperinch/10);
 				    
 				}
 				
@@ -112,7 +119,7 @@ public class PathGenerator {
 				        seg.dt, seg.x, seg.y, seg.position, seg.velocity, 
 				            seg.acceleration, seg.jerk, seg.heading);
 				    
-				    outfileright_ticks.printf("{%f,%f,10},\n",seg.position*ticksperinch,seg.velocity*ticksperinch/100);
+				    outfileright_ticks.printf("{%f,%f,10},\n",seg.position*ticksperinch,seg.velocity*ticksperinch/10);
 				    
 				}
 				
