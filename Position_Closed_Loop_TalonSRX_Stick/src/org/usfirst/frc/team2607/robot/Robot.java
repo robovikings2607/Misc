@@ -22,7 +22,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * or to operate a game mechanism in the robot to a specific position (for example,
  * to more a shooter mechanism to a particular position).
  */
-
+/*
+ * NOTE: This sample code was modified to support the CTRE libraries from Pheonix Framework Version 5.2.1.1
+ * and TalonSRC firmware version 3.3.
+ */
+	
 /*
  * IterativeRobot is a standard class defined in the FRC Java library.  We created a class named "Robot"
  * which is based on the class "IterativeRobot".  This class has a number of methods which we will
@@ -104,21 +108,25 @@ public class Robot extends IterativeRobot {
 	int _display_Loops=0;
 	int _adjustPosition_Loops=0;
 	
-	int timeoutMs = 0;  // A value of zero means not checks for correct setting
-	int slotIdx = 0;    // I need to read about this.
-	int pidIdx = 0;    // Zero is for the primary profile
+/*
+ * Here are some variables that will be used to call Talon methods.
+ */
 	
-	double PIDControlF;
-	double PIDControlP;
-	double PIDControlI;
-	double PIDControlD;
+	int timeoutMs = 0;  // A value of zero means not checks for correct setting
+	int slotIdx = 0;    // There are two profile slots in the Talon SRX to hold different PID settings
+	int pidIdx = 0;     // Each slot has a primary and concatenated version.  Need more information here
+	
+	double PIDControlF;  // This is used to hold the Forward Gain value of the PID loop
+	double PIDControlP;  // This is used to hold the Proportional Gain value of the PID loop
+	double PIDControlI;  // This is used to hold the Integral Gain value of the PID loop
+	double PIDControlD;  // This is used to hold the Derivative Gain value of the PID loop
 
 
 
 /*
  * The statement below creates a new object _joy of the from the class Joystick.  The class invocation
  * takes one parameter, the Joystick number, in this case Joystick number zero.  We used an XBOX
- * control pad to run this program.
+ * control pad to interface with this program.
  */
 	Joystick _joy = new Joystick(0);
 
@@ -138,10 +146,9 @@ public class Robot extends IterativeRobot {
 	 * rotation, but since it is a quad encoder, in the RoboRio, we use 256 x 4 (Quad = four) or 1024
 	 * native units or ticks per rotation.  It is important to set the correct encoder type so the
 	 * RoboRio can understand the signals from the encoder.  And remember, these are 1024 ticks per
-	 * encoder rotation which may not be the same as motor rotations.  Keep that in mind.
+	 * encoder rotation which may not be the same as motor rotations when a gearbox is installed between
+	 * the motor shaft and the shaft where the encoder has been installed.
 	 */
-		
-//	_talon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 		
 		_talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, pidIdx, timeoutMs);
 
@@ -169,8 +176,6 @@ public class Robot extends IterativeRobot {
 	 * below, and try again.
 	 */
 		
-	//	_talon.reverseSensor(false);
-		
 		_talon.setInverted(false);
 			
 	/*
@@ -178,35 +183,32 @@ public class Robot extends IterativeRobot {
 	 * Grayhill 63R256 quad encoder provides 1024 ticks per rotation (revolution).
 	 */
 
-		// This method does not seem to be supported in the 2018 TalonSRX class.  Commented out for now.
+	// The method below does not seem to be supported in the 2018 TalonSRX class.  Commented out for now.
 	//	_talon.configEncoderCodesPerRev(1024);
-		
+
 
 		
 	/*
 	 * The method below sets the voltage that the TalonSRX should send to the motor when it is
-	 * at nominal throttle position.  This needs to be research more because it does not seem to do
-	 * anything in the position closed loop.
+	 * at nominal throttle position.
 	 * 
 	 */
-	//	_talon.configNominalOutputVoltage(+2f, -2f);
 		
 		_talon.configNominalOutputForward(0.0, timeoutMs);
 		_talon.configNominalOutputReverse(0.0, timeoutMs);
 		
 	
 	/*
-	 * The method below sets the maximum output voltage that the TalonSRX can apply to the motor, for
-	 * the forward direction and the backwards direction.  If you set these two values to zero, the
-	 * motor won't move.  You can also prevent the motor to move forward if you set the forward voltage
-	 * to zero, or to more backwards if you set the backwards voltage to zero.  The maximum value for
-	 * the FRC robot is 12 volts in either direction.  In this example, I used 6 Volts in both directions
+	 * The method below sets the maximum output percent voltage that the TalonSRX can apply to the motor, for
+	 * the forward direction and the reverse direction.  If you set these two values to zero, the
+	 * motor won't move.  You can also prevent the motor to move forward if you set the forward percent
+	 * to zero, or to move in reverse if you set the reverse percentage to zero.  The maximum value for
+	 * the FRC robot is +1.0 for the forward direction and -1.0 for the reverse direction.
+	 * In this example, I used 50% for both directions
 	 * since that fits the mechanism (less abrupt moves and we were moving less than one rotation so
-	 * we did not need that much speed).  Also, the mechanism had no load, so did not need any 
+	 * we did not need that much speed).  Also, the mechanism has no load, so did not need any 
 	 * significant motor torque.
 	 */
-		
-	//	_talon.configPeakOutputVoltage(+6f, -6f);
 		
 		_talon.configPeakOutputForward(0.50, timeoutMs);  // 50% peak voltage forward
 		_talon.configPeakOutputReverse(-0.50, timeoutMs);  // 50% peak voltage reverse
@@ -222,28 +224,24 @@ public class Robot extends IterativeRobot {
 	 * -110 encoder ticks. This is useful because if we can live with some error window, it speeds up
 	 * the process as the TalonSRX can stop searching for the exact position sooner. 
 	 */
-	//	_talon.setAllowableClosedLoopErr(10);
 		
 		_talon.configAllowableClosedloopError(slotIdx, 10, timeoutMs);
 		
 	/*
 	 * The method below sets the ramp rate, or how fast the TalonSRX will increase the voltage
-	 * in units of percent of throttle per millisecond.  It needs more research because it did not
-	 * seem to do anything as we changed this parameter.
+	 * in units of seconds to full throttle.  A value of zero disables the ramp rate and the Talon
+	 * will go to the requested percent voltage as fast as possible.
 	 */
-	//	_talon.setCloseLoopRampRate(0.0);
 		
 		_talon.configClosedloopRamp(0.0, timeoutMs);
 		
 /*
- * The TalonSRX allows you to store PID parameters into two different profiles (profiles 0 and 1).
+ * The TalonSRX allows you to store PID parameters into two different profiles (Slot 0 and 1).
  * For example, if you have need a high speed and low speed driving mode, you can store the high speed
  * PID settings in Profile 0 and the low speed PID settings in Profile 1, and then switch back and
  * forth depending on whether you're in high speed or low speed mode.  We use Profile 0 only in this
  * example as we do not have a need for a second profile.
  */
-		
-//		_talon.setProfile(0);
 		
 		_talon.selectProfileSlot(slotIdx, pidIdx);
 
@@ -267,11 +265,6 @@ public class Robot extends IterativeRobot {
  * parameters) to complete the job.  For this example, just using P was sufficient for the job.
  */
 		
-//		_talon.setF(0.0);
-//		_talon.setP(3.5);
-//		_talon.setI(0.0);
-//		_talon.setD(0.0);
-		
 		PIDControlF = 0.00;
 		PIDControlP = 0.6;
 		PIDControlI = 0.01;
@@ -288,17 +281,6 @@ public class Robot extends IterativeRobot {
 		_talon.config_kD(slotIdx, PIDControlD, timeoutMs);
 		
 
-	
-/*
- * We can now set the TalonSRX in Closed Loop Position control mode.  You can do it in the 
- * robotInit() method if this TalonSRX will always be in Position control mode.  But if you need
- * to switch this TalonSRX between Position control mode and Speed control mode, for example,
- * then you can switch to the appropriate mode lated in the code as appropriate.
- * In this sample code, we are going to change to Position control later in the code.
- */
-		
-//		_talon.changeControlMode(TalonControlMode.Position);
-
 	}
 	
 	@Override
@@ -308,20 +290,7 @@ public class Robot extends IterativeRobot {
  		_talon.setIntegralAccumulator(0.00, pidIdx, timeoutMs);
 		_talon.setSelectedSensorPosition(0, pidIdx, timeoutMs);
 		
-/*		
-		PIDControlF = SmartDashboard.getNumber("PIDControl F: ", 0.00);
-		PIDControlP = SmartDashboard.getNumber("PIDControl P: ", 0.00);
-		PIDControlI = SmartDashboard.getNumber("PIDControl I: ", 0.00);
-		PIDControlD = SmartDashboard.getNumber("PIDControl D: ", 0.00);
-		
-		_talon.config_kF(slotIdx, PIDControlF, timeoutMs);
-		_talon.config_kP(slotIdx, PIDControlP, timeoutMs);
-		_talon.config_kI(slotIdx, PIDControlI, timeoutMs);
-		_talon.config_kD(slotIdx, PIDControlD, timeoutMs);
-*/
 	}	
-	
-
 	
 /*
  * The method teleopPeriodic() is called approximately every 20 milliseconds when the robot is
@@ -367,21 +336,17 @@ public class Robot extends IterativeRobot {
 			 * interpret instructions to move to a target position.  There are other control modes
 			 * besides position: speed, current, etc.  We want to control position.
 			 */
-//			_talon.changeControlMode(TalonControlMode.Position);
+
 			_talon.set(ControlMode.Position,targetPosition);
 
-			/*
-			 * Here's how we set the target position.
-			 */
-//			_talon.set(targetPosition);
 			_adjustPosition_Loops=0;
 		}
 		
 
 			
 /*
- * This next code block prints the encoder position, the encoding error, the button
- * bring pressed, and the desired encoder position.  The error is the difference
+ * This next code block prints the encoder position, the encoding error, the joystick position,
+ * and the desired encoder position.  The error is the difference
  * between the target position and the actual position of the encoder.  Ideally the error should be
  * zero, meaning that the TalonSRX was able to position the wheel or mechanism exactly at the 
  * requested target position.  In reality, it is not practical to get to zero error because of a 
@@ -424,6 +389,7 @@ public class Robot extends IterativeRobot {
 			SmartDashboard.putNumber("Numerical Position", _talon.getSelectedSensorPosition(pidIdx));
 			SmartDashboard.putNumber("Error: ", _talon.getClosedLoopError(pidIdx));
 			SmartDashboard.putNumber("Axis Position", _joy.getRawAxis(1));
+			
 			_display_Loops=0;
 		}
 	}	
