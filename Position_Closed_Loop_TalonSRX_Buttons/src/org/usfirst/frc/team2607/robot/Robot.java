@@ -303,20 +303,20 @@ public class Robot extends IterativeRobot {
 			 * Here's how we set the target position to +250 ticks.  This is a variable so it is
 			 * not instructing the TalonSRX to do anything.  It is a program variable.
 			 */
-			targetPosition = 250;
+			targetPosition = 1024*-3 ;
 
 		} 
 		else if (_joy.getRawButton(2))
 		{
-			targetPosition = -500.0;
+			targetPosition = 1024*3 ;
 		}
 		else if (_joy.getRawButton(3))
 		{
-			targetPosition = 500.0;
+			targetPosition = 1024*-2 ;
 		}
 		else if (_joy.getRawButton(4))
 		{
-			targetPosition = 1024.0;
+			targetPosition = 1024.0*2 ;
 		}		
 		else
 		{
@@ -326,7 +326,7 @@ public class Robot extends IterativeRobot {
 		 * position.
 		 */
 			
-			targetPosition = 0.0;
+		
 		}
 		
 		/*
