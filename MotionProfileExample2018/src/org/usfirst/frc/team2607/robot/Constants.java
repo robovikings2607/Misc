@@ -40,4 +40,12 @@ public class Constants {
 	 * Motor deadband, set to 1%.
 	 */
 	public static final double kNeutralDeadband = 0.01;
+	
+	/*
+	 * This is the size of the top buffer
+	 * 
+	 */
+	
+	public static final int kTopBufferSize = 512;
+	
 }

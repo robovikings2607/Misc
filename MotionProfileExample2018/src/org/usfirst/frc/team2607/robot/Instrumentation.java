@@ -52,7 +52,7 @@ public class Instrumentation {
 	}
 
 	public static void process(MotionProfileStatus status, double pos,
-			double vel, double heading) {
+			double vel, double heading, double encPos, double encVel) {
 		double now = edu.wpi.first.wpilibj.Timer.getFPGATimestamp();
 
 		if ((now - timeout) > 0.2) {
@@ -60,7 +60,7 @@ public class Instrumentation {
 			/* fire a loop every 200ms */
 
 			if (--count <= 0) {
-				count = 8;
+				count = 16;
 				/* every 8 loops, print our columns */
 
 				System.out.format("%-9s\t", "outEn");
@@ -75,6 +75,8 @@ public class Instrumentation {
 				System.out.format("%-9s\t", "targVel");
 				System.out.format("%-9s\t", "SlotSel0");
 				System.out.format("%-9s\t", "timeDurMs");
+				System.out.format("%-9s\t", "EncPos");
+				System.out.format("%-9s\t", "EncVel");
 
 				System.out.format("\n");
 			}
@@ -89,8 +91,11 @@ public class Instrumentation {
 			System.out.format("%-9s\t", (status.isLast ? "1" : ""));
 			System.out.format("%-9s\t", pos);
 			System.out.format("%-9s\t", vel);
+			System.out.format("%-9s\t", encPos);
+			System.out.format("%-9s\t", encVel);
 			System.out.format("%-9s\t", status.profileSlotSelect);
 			System.out.format("%-9s\t", status.timeDurMs);
+			
 
 			System.out.format("\n");
 		}
