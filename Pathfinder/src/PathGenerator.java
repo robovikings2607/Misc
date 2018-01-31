@@ -24,13 +24,13 @@ public class PathGenerator {
 				
 				// These are the left start point waypoints
 				
-				//new Waypoint(40,17.75,Pathfinder.d2r(90)),
-				//new Waypoint(40,242.0,Pathfinder.d2r(90))
+				new Waypoint(40,17.75,Pathfinder.d2r(90)),
+				new Waypoint(40,242.0,Pathfinder.d2r(90))
 				
 				// Test Points
 				
-				new Waypoint(40.0,17.75,Pathfinder.d2r(90)),
-				new Waypoint(40.0,47.75,Pathfinder.d2r(90))
+				//new Waypoint(40.0,17.75,Pathfinder.d2r(90)),
+				//new Waypoint(40.0,47.75,Pathfinder.d2r(90))
 				
 			};
 		
@@ -39,7 +39,7 @@ public class PathGenerator {
 		 */
 
 // config parameters: time interval, velocity, acceleration, and jerk as the last four parameters		
-			Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, 0.010, 144.0,150.0, 100.0);
+			Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, 0.010, 10.0,50.0, 50.0);
 			Trajectory trajectory = Pathfinder.generate(points, config);
 			TankModifier modifier = new TankModifier(trajectory).modify(28);
 			
@@ -77,14 +77,35 @@ public class PathGenerator {
 			}
 			*/
 			
-			File myFile = new File("C:\\Users\\Ramiro\\Documents\\Motion Profiling\\Testing\\trajectory.csv");
-			Pathfinder.writeToCSV(myFile, trajectory);		
-							
+			PrintWriter trajectory_inch;
+			
+			try {
+				
+				trajectory_inch = new PrintWriter("C:\\Temp\\trajectory.csv");
+
+				for (int i = 0; i < trajectory.length(); i++) {
+					
+				    Trajectory.Segment seg = trajectory.get(i);
+				    
+				    trajectory_inch.printf("%f,%f,%f,%f,%f,%f,%f,%f\n", 
+				        seg.dt, seg.x, seg.y, seg.position, seg.velocity, 
+				            seg.acceleration, seg.jerk, seg.heading);
+				    
+//				    outfileleft_ticks.printf("{%f,%f,10},\n",seg.position*ticksperinch,seg.velocity*ticksperinch/10);
+				    
+				}
+				
+				trajectory_inch.close();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			PrintWriter outfileleft_inch, outfileleft_ticks;
 			try {
 				
-				outfileleft_inch = new PrintWriter("left_trajectory_inch.csv");
-				outfileleft_ticks = new PrintWriter("left_trajectory_tick.csv");
+				outfileleft_inch = new PrintWriter("C:\\Temp\\left_trajectory_inch.csv");
+				outfileleft_ticks = new PrintWriter("C:\\Temp\\left_trajectory_tick.csv");
 				
 				for (int i = 0; i < left.length(); i++) {
 					
@@ -108,8 +129,8 @@ public class PathGenerator {
 						
 			PrintWriter outfileright_inch, outfileright_ticks;
 			try {
-				outfileright_inch = new PrintWriter("right_trajectory_inch.csv");
-				outfileright_ticks = new PrintWriter("right_trajectory_ticks.csv");
+				outfileright_inch = new PrintWriter("C:\\Temp\\right_trajectory_inch.csv");
+				outfileright_ticks = new PrintWriter("C:\\Temp\\right_trajectory_ticks.csv");
 				
 				for (int i = 0; i < right.length(); i++) {
 					
