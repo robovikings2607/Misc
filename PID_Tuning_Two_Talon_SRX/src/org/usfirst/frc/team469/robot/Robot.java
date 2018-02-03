@@ -30,8 +30,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 public class Robot extends TimedRobot {
   
-	TalonSRX _talonRight = new TalonSRX(15);
-	TalonSRX _talonLeft = new TalonSRX(16);
+	TalonSRX _talonRight = new TalonSRX(10);
+	TalonSRX _talonLeft = new TalonSRX(6);
 	Joystick _joy = new Joystick(0);	
 
 	int _loops = 0;
@@ -50,19 +50,19 @@ public class Robot extends TimedRobot {
 	int pidIdx = 0;   // PID within profile
 	int timeoutMs = 10;
 	
-	double PIDControlRight_F;  // This is used to hold the Forward Gain value of the PID loop
-	double PIDControlRight_P;  // This is used to hold the Proportional Gain value of the PID loop
-	double PIDControlRight_I;  // This is used to hold the Integral Gain value of the PID loop
-	double PIDControlRight_D;  // This is used to hold the Derivative Gain value of the PID loop
+	double PIDControlRight_F = 0;  // This is used to hold the Forward Gain value of the PID loop
+	double PIDControlRight_P = 0;  // This is used to hold the Proportional Gain value of the PID loop
+	double PIDControlRight_I = 0;  // This is used to hold the Integral Gain value of the PID loop
+	double PIDControlRight_D = 0;  // This is used to hold the Derivative Gain value of the PID loop
 	
-	double PIDControlLeft_F;  // This is used to hold the Forward Gain value of the PID loop
-	double PIDControlLeft_P;  // This is used to hold the Proportional Gain value of the PID loop
-	double PIDControlLeft_I;  // This is used to hold the Integral Gain value of the PID loop
-	double PIDControlLeft_D;  // This is used to hold the Derivative Gain value of the PID loop
+	double PIDControlLeft_F = 0;  // This is used to hold the Forward Gain value of the PID loop
+	double PIDControlLeft_P = 0;  // This is used to hold the Proportional Gain value of the PID loop
+	double PIDControlLeft_I = 0;  // This is used to hold the Integral Gain value of the PID loop
+	double PIDControlLeft_D = 0;  // This is used to hold the Derivative Gain value of the PID loop
 	
 	boolean PID_enabled = false;
 
-	Preferences prefs;
+//	Preferences prefs;
 	
 	@Override
 	public void robotInit() {
@@ -73,7 +73,7 @@ public class Robot extends TimedRobot {
 	_talonRight.configNominalOutputReverse(0.0, timeoutMs);
 	_talonRight.configOpenloopRamp(0.0, timeoutMs);
 	_talonRight.configClosedloopRamp(0.0, timeoutMs);
-	_talonRight.setInverted(false);
+	_talonRight.setInverted(true);
 	_talonRight.selectProfileSlot(slotIdx, pidIdx);
 	
 	_talonLeft.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, pidIdx, timeoutMs);
@@ -87,7 +87,7 @@ public class Robot extends TimedRobot {
 	_talonLeft.selectProfileSlot(slotIdx, pidIdx);
 	
 	
-	prefs = Preferences.getInstance(); // To access Robot Preferences
+//	prefs = Preferences.getInstance(); // To access Robot Preferences
 	
 //	PIDControlF = prefs.getDouble("PID_F", 0);
 	
@@ -98,15 +98,15 @@ public class Robot extends TimedRobot {
 		
 //		prefs = Preferences.getInstance();
 		
-		PIDControlRight_F = SmartDashboard.getNumber("PIDRight_F ", 0);
-		PIDControlRight_P = SmartDashboard.getNumber("PIDRight_P ", 0);
-		PIDControlRight_I = SmartDashboard.getNumber("PIDRight_I ", 0);
-		PIDControlRight_D = SmartDashboard.getNumber("PIDRight_D ", 0);
+		PIDControlRight_F = SmartDashboard.getNumber("PID_F_R ", PIDControlRight_F);
+		PIDControlRight_P = SmartDashboard.getNumber("PID_P_R ", PIDControlRight_P);
+		PIDControlRight_I = SmartDashboard.getNumber("PID_I_R ", PIDControlRight_I);
+		PIDControlRight_D = SmartDashboard.getNumber("PID_D_R ", PIDControlRight_D);
 		
-		PIDControlLeft_F = SmartDashboard.getNumber("PIDLeft_F ", 0);
-		PIDControlLeft_P = SmartDashboard.getNumber("PIDLeft_P ", 0);
-		PIDControlLeft_I = SmartDashboard.getNumber("PIDLeft_I ", 0);
-		PIDControlLeft_D = SmartDashboard.getNumber("PIDLeft_D ", 0);
+		PIDControlLeft_F = SmartDashboard.getNumber("PID_F_L ", PIDControlLeft_F);
+		PIDControlLeft_P = SmartDashboard.getNumber("PID_P_L ", PIDControlLeft_P);
+		PIDControlLeft_I = SmartDashboard.getNumber("PID_I_L ", PIDControlLeft_I);
+		PIDControlLeft_D = SmartDashboard.getNumber("PID_D_L ", PIDControlLeft_D);
 		
 		maxEncoderSpeedRight = 0;
 		minEncoderSpeedRight = 0;
@@ -114,11 +114,10 @@ public class Robot extends TimedRobot {
 		maxEncoderSpeedLeft = 0;
 		minEncoderSpeedLeft = 0;
 		
-		Input_Multiplier = SmartDashboard.getNumber("Throttle Multiplier ",1);
-		
+		Input_Multiplier = SmartDashboard.getNumber("Throttle Multiplier ",1);	
 		PID_enabled = SmartDashboard.getBoolean("PID_Enabled ", false);
-		
 		throttleInput = SmartDashboard.getNumber("Throttle Input ",0);
+
 		
 		_talonRight.config_kF(slotIdx, PIDControlRight_F, timeoutMs);
 		_talonRight.config_kP(slotIdx, PIDControlRight_P, timeoutMs);
@@ -197,26 +196,42 @@ public class Robot extends TimedRobot {
         	{
 //        		logger.run();
         		
+        		/*
         		SmartDashboard.putNumber("Throttle Input ", throttleInput);
         		SmartDashboard.putNumber("Throttle Multiplier ", Input_Multiplier);
         		SmartDashboard.putBoolean("PID_Enabled ", PID_enabled);
+        		*/
+        		
+        		SmartDashboard.getNumber("Throttle Input ", throttleInput);
+        		SmartDashboard.getNumber("Throttle Multiplier ", Input_Multiplier);
+        		SmartDashboard.getBoolean("PID_Enabled ", PID_enabled);
+        		
         		SmartDashboard.putNumber("Requested ", throttleInput * Input_Multiplier);
         		
         		SmartDashboard.putNumber("Encoder Speed_R ", _talonRight.getSelectedSensorVelocity(0));
+
         		SmartDashboard.putNumber("PID_F_R ", PIDControlRight_F);	
         		SmartDashboard.putNumber("PID_P_R ", PIDControlRight_P);	
         		SmartDashboard.putNumber("PID_I_R ", PIDControlRight_I);	
         		SmartDashboard.putNumber("PID_D_R ", PIDControlRight_D);
+
+        		
         		SmartDashboard.putNumber("Calculated Error_R ",throttleInput * Input_Multiplier - _talonRight.getSelectedSensorVelocity(0));
         		SmartDashboard.putNumber("Reported Request_R ", _talonRight.getClosedLoopTarget(0));
         		SmartDashboard.putNumber("Reported Error_R ", _talonRight.getClosedLoopError(0));
         		SmartDashboard.putNumber("Encoder Speed_R ", _talonRight.getSelectedSensorVelocity(0));
         		
         		SmartDashboard.putNumber("Encoder Speed_L ", _talonLeft.getSelectedSensorVelocity(0));
+
+
         		SmartDashboard.putNumber("PID_F_L ", PIDControlLeft_F);	
         		SmartDashboard.putNumber("PID_P_L ", PIDControlLeft_P);	
         		SmartDashboard.putNumber("PID_I_L ", PIDControlLeft_I);	
         		SmartDashboard.putNumber("PID_D_L ", PIDControlLeft_D);
+
+
+
+        		
         		SmartDashboard.putNumber("Calculated Error_L ",throttleInput * Input_Multiplier - _talonLeft.getSelectedSensorVelocity(0));
         		SmartDashboard.putNumber("Reported Request_L ", _talonLeft.getClosedLoopTarget(0));
         		SmartDashboard.putNumber("Reported Error_L ", _talonLeft.getClosedLoopError(0));
@@ -224,6 +239,8 @@ public class Robot extends TimedRobot {
         	}
         	else
         	{
+           		SmartDashboard.getNumber("Throttle Input ", throttleInput);
+           		
         		if (_talonRight.getSelectedSensorVelocity(0) > maxEncoderSpeedRight)
         		{
         			maxEncoderSpeedRight = _talonRight.getSelectedSensorVelocity(0);
@@ -234,7 +251,6 @@ public class Robot extends TimedRobot {
         			minEncoderSpeedRight = _talonRight.getSelectedSensorVelocity(0);
         		}
         		
-           		SmartDashboard.putNumber("Throttle Input ", throttleInput);
         		SmartDashboard.putNumber("Encoder Speed_R ", _talonRight.getSelectedSensorVelocity(0));
         		SmartDashboard.putNumber("Maximum Encoder Speed_R ", maxEncoderSpeedRight);
         		SmartDashboard.putNumber("Minimum Encoder Speed_R ", minEncoderSpeedRight);
@@ -249,7 +265,6 @@ public class Robot extends TimedRobot {
         			minEncoderSpeedLeft = _talonLeft.getSelectedSensorVelocity(0);
         		}
         		
-           		SmartDashboard.putNumber("Throttle Input ", throttleInput);
         		SmartDashboard.putNumber("Encoder Speed_L ", _talonLeft.getSelectedSensorVelocity(0));
         		SmartDashboard.putNumber("Maximum Encoder Speed_L ", maxEncoderSpeedLeft);
         		SmartDashboard.putNumber("Minimum Encoder Speed_L ", minEncoderSpeedLeft);
