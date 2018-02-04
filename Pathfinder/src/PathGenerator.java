@@ -13,8 +13,8 @@ public class PathGenerator {
 		
 		Waypoint[] points = new Waypoint[] {
 			    /*  This is the routine for the left switch drop */
-				// new Waypoint(135.5,17.75,Pathfinder.d2r(90)),
-			    // new Waypoint(105.5,122.25,Pathfinder.d2r(90))
+				 new Waypoint(135.5,17.75,Pathfinder.d2r(90)),
+			     new Waypoint(105.5,122.25,Pathfinder.d2r(90))
 			    
 				
 				// These are the coordinates for the right switch drop
@@ -24,8 +24,8 @@ public class PathGenerator {
 				
 				// These are the left start point waypoints
 				
-				new Waypoint(40,17.75,Pathfinder.d2r(90)),
-				new Waypoint(40,242.0,Pathfinder.d2r(90))
+				// new Waypoint(40,17.75,Pathfinder.d2r(90)),
+				// new Waypoint(40,242.0,Pathfinder.d2r(90))
 				
 				// Test Points
 				
@@ -39,9 +39,9 @@ public class PathGenerator {
 		 */
 
 // config parameters: time interval, velocity, acceleration, and jerk as the last four parameters		
-			Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, 0.010, 10.0,50.0, 50.0);
+			Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, 0.010, 80.0,50.0, 50.0);
 			Trajectory trajectory = Pathfinder.generate(points, config);
-			TankModifier modifier = new TankModifier(trajectory).modify(28);
+			TankModifier modifier = new TankModifier(trajectory).modify(27.5);
 			
 			Trajectory left  = modifier.getLeftTrajectory();       // Get the Left Side
 			Trajectory right = modifier.getRightTrajectory();      // Get the Right Side
@@ -51,7 +51,7 @@ public class PathGenerator {
 			
 			Trajectory.Segment leftseg = left.get(0);
 			Trajectory.Segment rightseg = right.get(0);
-			double ticksperinch = 178.583; // this is equal to (2 * pi * wheel radius in inches) / 1024
+			double ticksperinch = 50.775; // this is equal to (2 * pi * wheel radius in inches) / 1024
 			
 			System.out.printf("Left Length %d; Right Length %d; Robot Width Track %f\n",left.length(),right.length(),rightseg.x - leftseg.x);
 					
@@ -101,11 +101,20 @@ public class PathGenerator {
 				e.printStackTrace();
 			}
 			
-			PrintWriter outfileleft_inch, outfileleft_ticks;
+			PrintWriter outfileleft_inch, outfileleft_ticks, outfile_class;
+			PrintWriter outfileright_inch, outfileright_ticks;
+			
 			try {
 				
 				outfileleft_inch = new PrintWriter("C:\\Temp\\left_trajectory_inch.csv");
 				outfileleft_ticks = new PrintWriter("C:\\Temp\\left_trajectory_tick.csv");
+				outfile_class = new PrintWriter("C:\\Temp\\MotionProfile_Class.csv");
+				
+				outfile_class.printf("package org.usfirst.frc.team2607.robot;\n\n");
+				outfile_class.printf("public class MotionProfile {\n\n");
+				outfile_class.printf("\t public static final int kNumPoints = %d;\n",left.length());
+				outfile_class.printf("\t public static double [][] PointsLeft = new double [][] {\n\n");
+
 				
 				for (int i = 0; i < left.length(); i++) {
 					
@@ -116,19 +125,17 @@ public class PathGenerator {
 				            seg.acceleration, seg.jerk, seg.heading);
 				    
 				    outfileleft_ticks.printf("{%f,%f,10},\n",seg.position*ticksperinch,seg.velocity*ticksperinch/10);
+				    outfile_class.printf("{%f,%f,10},\n",seg.position*ticksperinch,seg.velocity*ticksperinch/10);
 				    
 				}
 				
 				outfileleft_inch.close();
 				outfileleft_ticks.close();
 				
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-						
-			PrintWriter outfileright_inch, outfileright_ticks;
-			try {
+				
+				outfile_class.printf("\n }%C",59);
+				outfile_class.printf("\n\n\t public static double [][] PointsRight = new double [][] {\n\n");
+			
 				outfileright_inch = new PrintWriter("C:\\Temp\\right_trajectory_inch.csv");
 				outfileright_ticks = new PrintWriter("C:\\Temp\\right_trajectory_ticks.csv");
 				
@@ -141,16 +148,21 @@ public class PathGenerator {
 				            seg.acceleration, seg.jerk, seg.heading);
 				    
 				    outfileright_ticks.printf("{%f,%f,10},\n",seg.position*ticksperinch,seg.velocity*ticksperinch/10);
+				    outfile_class.printf("{%f,%f,10},\n",seg.position*ticksperinch,seg.velocity*ticksperinch/10);
 				    
 				}
 				
+				outfile_class.printf("\n };");
+				outfile_class.printf("\n }");
+				
 				outfileright_inch.close();
 				outfileright_ticks.close();
+				outfile_class.close();
 				
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}		
+			}
 			
 			System.out.println("Done !!!");
 
