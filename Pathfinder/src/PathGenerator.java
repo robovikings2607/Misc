@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.Scanner; 
 
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
@@ -11,10 +12,49 @@ public class PathGenerator {
 
 	public static void main(String[] args) {
 		
+		Scanner scan = new Scanner(System.in);
+		
+
+		double vel = 144.0;
+		double acc = 100.0;
+		double jerk = 50.0;
+		double width = 28.0;
+		double ticksperinch = 50.775;
+		
+		/*
+		 * This code can be used to make this script interactive and run as a jar file (java -jar <name.jar>)
+		 * Uncomment this and Export -> Runnable jar file
+		 * 
+		
+		char answer = 'n';
+				
+		while (true)
+		{	
+			
+			System.out.printf("Enter Max Velocity (inches/sec): ");
+			vel = scan.nextDouble();
+			System.out.printf("Enter Max Accelaration (inches/sec2): ");
+			acc = scan.nextDouble();
+			System.out.printf("Enter Max Jerk (inches/sec3): ");
+			jerk = scan.nextDouble();
+		
+			System.out.printf("You Entered Velocity = %f  Acceleration = %f  Jerk = %f\n",vel,acc,jerk);
+			System.out.printf("Accept (y/n) ? ");
+			answer = scan.next(".").charAt(0);
+		
+			if ((answer == 'y') || (answer == 'Y')) {
+				break;
+			}
+		}
+		
+		*/
+			
+		scan.close();
+		
 		Waypoint[] points = new Waypoint[] {
 			    /*  This is the routine for the left switch drop */
-				 new Waypoint(135.5,17.75,Pathfinder.d2r(90)),
-			     new Waypoint(105.5,122.25,Pathfinder.d2r(90))
+				 new Waypoint(164,17.75,Pathfinder.d2r(90)),
+			     new Waypoint(104,122.25,Pathfinder.d2r(90))
 			    
 				
 				// These are the coordinates for the right switch drop
@@ -39,9 +79,9 @@ public class PathGenerator {
 		 */
 
 // config parameters: time interval, velocity, acceleration, and jerk as the last four parameters		
-			Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, 0.010, 80.0,50.0, 50.0);
+			Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, 0.010, vel,acc, jerk);
 			Trajectory trajectory = Pathfinder.generate(points, config);
-			TankModifier modifier = new TankModifier(trajectory).modify(27.5);
+			TankModifier modifier = new TankModifier(trajectory).modify(width);
 			
 			Trajectory left  = modifier.getLeftTrajectory();       // Get the Left Side
 			Trajectory right = modifier.getRightTrajectory();      // Get the Right Side
@@ -51,7 +91,6 @@ public class PathGenerator {
 			
 			Trajectory.Segment leftseg = left.get(0);
 			Trajectory.Segment rightseg = right.get(0);
-			double ticksperinch = 50.775; // this is equal to (2 * pi * wheel radius in inches) / 1024
 			
 			System.out.printf("Left Length %d; Right Length %d; Robot Width Track %f\n",left.length(),right.length(),rightseg.x - leftseg.x);
 					
