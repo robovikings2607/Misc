@@ -101,7 +101,7 @@ public class PathGenerator {
 				outfile_class.printf("\n\n\t public static double [][] PointsRight = new double [][] {\n\n");
 			
 				outfileright_inch = new PrintWriter("C:\\Temp\\rw_traj_" + name + "_inch.csv");
-				outfileright_ticks = new PrintWriter("C:\\Temp\\lw_traj_" + name + "_ticks.csv");
+				outfileright_ticks = new PrintWriter("C:\\Temp\\rw_traj_" + name + "_ticks.csv");
 				
 				for (i = 0; i < right.length(); i++) {
 					

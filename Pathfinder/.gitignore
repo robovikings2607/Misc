@@ -1,1 +1,6 @@
 /bin/
+/left_trajectory_inch.csv
+/left_trajectory_tick.csv
+/right_trajectory_inch.csv
+/right_trajectory_ticks.csv
+/trajectory.csv
