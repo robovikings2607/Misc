@@ -9,144 +9,69 @@ import jaci.pathfinder.Waypoint;
 import jaci.pathfinder.modifiers.TankModifier;
 
 public class PathGenerator {
+	
+	static double width = Constants.robotTrackWidth;
+	static double ticksperinch = Constants.ticksPerInch;
+	static double trajPointDuration = Constants.trajectoryPointDuration;
+	
+	static String name;
+	static double vel;
+	static double acc;
+	static double jerk;
+	static Waypoint [] points;
 
 	public static void main(String[] args) {
+				
+		int i,answer;
 		
-		Scanner scan = new Scanner(System.in);
+		answer = selectTrajectory();
+		populateParameters(answer);
 		
 
-		double vel = 144.0;
-		double acc = 100.0;
-		double jerk = 50.0;
-		double width = 28.0;
-		double ticksperinch = 50.775;
-		
-		/*
-		 * This code can be used to make this script interactive and run as a jar file (java -jar <name.jar>)
-		 * Uncomment this and Export -> Runnable jar file
-		 * 
-		
-		char answer = 'n';
-				
-		while (true)
-		{	
+		Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, 
+				trajPointDuration, vel,acc, jerk);
+		Trajectory trajectory = Pathfinder.generate(points, config);
+		TankModifier modifier = new TankModifier(trajectory).modify(width);
 			
-			System.out.printf("Enter Max Velocity (inches/sec): ");
-			vel = scan.nextDouble();
-			System.out.printf("Enter Max Accelaration (inches/sec2): ");
-			acc = scan.nextDouble();
-			System.out.printf("Enter Max Jerk (inches/sec3): ");
-			jerk = scan.nextDouble();
-		
-			System.out.printf("You Entered Velocity = %f  Acceleration = %f  Jerk = %f\n",vel,acc,jerk);
-			System.out.printf("Accept (y/n) ? ");
-			answer = scan.next(".").charAt(0);
-		
-			if ((answer == 'y') || (answer == 'Y')) {
-				break;
-			}
-		}
-		
-		*/
+		Trajectory left  = modifier.getLeftTrajectory();       // Get the Left Side
+		Trajectory right = modifier.getRightTrajectory();      // Get the Right Side
 			
-		scan.close();
-		
-		Waypoint[] points = new Waypoint[] {
-			    /*  This is the routine for the left switch drop */
-				 new Waypoint(164,17.75,Pathfinder.d2r(90)),
-			     new Waypoint(104,122.25,Pathfinder.d2r(90))
-			    
-				
-				// These are the coordinates for the right switch drop
-				
-				//new Waypoint(135.5,17.75,Pathfinder.d2r(90)),
-				//new Waypoint(158.5,122.25,Pathfinder.d2r(90))
-				
-				// These are the left start point waypoints
-				
-				// new Waypoint(40,17.75,Pathfinder.d2r(90)),
-				// new Waypoint(40,242.0,Pathfinder.d2r(90))
-				
-				// Test Points
-				
-				//new Waypoint(40.0,17.75,Pathfinder.d2r(90)),
-				//new Waypoint(40.0,47.75,Pathfinder.d2r(90))
-				
-			};
-		
-		/*
-		 * a
-		 */
+		Trajectory.Segment leftseg = left.get(0);
+		Trajectory.Segment rightseg = right.get(0);
+			
+		System.out.printf("Left Length %d; Right Length %d; Robot Width Track %f\n",left.length(),right.length(),rightseg.x - leftseg.x);
 
-// config parameters: time interval, velocity, acceleration, and jerk as the last four parameters		
-			Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, 0.010, vel,acc, jerk);
-			Trajectory trajectory = Pathfinder.generate(points, config);
-			TankModifier modifier = new TankModifier(trajectory).modify(width);
+		PrintWriter trajectory_inch;
 			
-			Trajectory left  = modifier.getLeftTrajectory();       // Get the Left Side
-			Trajectory right = modifier.getRightTrajectory();      // Get the Right Side
-			
-//			System.out.println("Left Side " + left.length());
-//			System.out.println("Right Side " + right.length());
-			
-			Trajectory.Segment leftseg = left.get(0);
-			Trajectory.Segment rightseg = right.get(0);
-			
-			System.out.printf("Left Length %d; Right Length %d; Robot Width Track %f\n",left.length(),right.length(),rightseg.x - leftseg.x);
+		try {
+				
+			trajectory_inch = new PrintWriter("C:\\Temp\\traj_" + name + ".csv");
+
+			for (i = 0; i < trajectory.length(); i++)
+			{
 					
-			/*
-			for (int i = 0; i < left.length(); i++) {
-			    Trajectory.Segment seg = left.get(i);
-			    
-			    System.out.printf("%f,%f,%f,%f,%f,%f,%f,%f\n", 
+			    Trajectory.Segment seg = trajectory.get(i);
+				    
+			    trajectory_inch.printf("%f,%f,%f,%f,%f,%f,%f,%f\n", 
 			        seg.dt, seg.x, seg.y, seg.position, seg.velocity, 
 			            seg.acceleration, seg.jerk, seg.heading);
 			}
-			
-
-		
-			System.out.println("Right Side" + right.length());
-			
-			for (int i = 0; i < right.length(); i++) {
-			    Trajectory.Segment seg = right.get(i);
-			    
-			    System.out.printf("%f,%f,%f,%f,%f,%f,%f,%f\n", 
-			        seg.dt, seg.x, seg.y, seg.position, seg.velocity, 
-			            seg.acceleration, seg.jerk, seg.heading);
-			}
-			*/
-			
-			PrintWriter trajectory_inch;
-			
-			try {
-				
-				trajectory_inch = new PrintWriter("C:\\Temp\\trajectory.csv");
-
-				for (int i = 0; i < trajectory.length(); i++) {
-					
-				    Trajectory.Segment seg = trajectory.get(i);
-				    
-				    trajectory_inch.printf("%f,%f,%f,%f,%f,%f,%f,%f\n", 
-				        seg.dt, seg.x, seg.y, seg.position, seg.velocity, 
-				            seg.acceleration, seg.jerk, seg.heading);
-				    
-//				    outfileleft_ticks.printf("{%f,%f,10},\n",seg.position*ticksperinch,seg.velocity*ticksperinch/10);
-				    
-				}
 				
 				trajectory_inch.close();
+				
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
 			
 			PrintWriter outfileleft_inch, outfileleft_ticks, outfile_class;
 			PrintWriter outfileright_inch, outfileright_ticks;
 			
 			try {
 				
-				outfileleft_inch = new PrintWriter("C:\\Temp\\left_trajectory_inch.csv");
-				outfileleft_ticks = new PrintWriter("C:\\Temp\\left_trajectory_tick.csv");
+				outfileleft_inch = new PrintWriter("C:\\Temp\\lw_traj_" + name + "_inch.csv");
+				outfileleft_ticks = new PrintWriter("C:\\Temp\\lw_traj_" + name + "_ticks.csv");
 				outfile_class = new PrintWriter("C:\\Temp\\MotionProfile_Class.csv");
 				
 				outfile_class.printf("package org.usfirst.frc.team2607.robot;\n\n");
@@ -155,7 +80,7 @@ public class PathGenerator {
 				outfile_class.printf("\t public static double [][] PointsLeft = new double [][] {\n\n");
 
 				
-				for (int i = 0; i < left.length(); i++) {
+				for (i = 0; i < left.length(); i++) {
 					
 				    Trajectory.Segment seg = left.get(i);
 				    
@@ -175,10 +100,10 @@ public class PathGenerator {
 				outfile_class.printf("\n }%C",59);
 				outfile_class.printf("\n\n\t public static double [][] PointsRight = new double [][] {\n\n");
 			
-				outfileright_inch = new PrintWriter("C:\\Temp\\right_trajectory_inch.csv");
-				outfileright_ticks = new PrintWriter("C:\\Temp\\right_trajectory_ticks.csv");
+				outfileright_inch = new PrintWriter("C:\\Temp\\rw_traj_" + name + "_inch.csv");
+				outfileright_ticks = new PrintWriter("C:\\Temp\\lw_traj_" + name + "_ticks.csv");
 				
-				for (int i = 0; i < right.length(); i++) {
+				for (i = 0; i < right.length(); i++) {
 					
 				    Trajectory.Segment seg = right.get(i);
 				    
@@ -199,12 +124,98 @@ public class PathGenerator {
 				outfile_class.close();
 				
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
 			System.out.println("Done !!!");
 
+	}
+	
+	static int selectTrajectory() {
+		
+		int answer = 0;
+		boolean flag=true;
+		Scanner scan = new Scanner(System.in);
+		
+		while (flag)
+		{
+			System.out.println("Select One Trajectory:");
+			System.out.println("1): " + Constants.nameLeftSwitch);
+			System.out.println("2): " + Constants.nameRightSwitch);
+			System.out.println("3): " + Constants.nameLeftCrossLine);
+			System.out.println("4): " + Constants.nameRightCrossLine);
+			System.out.println("5): " + Constants.nameLeftScale);
+			System.out.println("6): " + Constants.nameRightScale);
+			System.out.println("7): " + Constants.nameTest);
+			System.out.printf("Enter your Choice: ");
+			answer = scan.nextInt();
+			
+			if((answer > 0 ) && (answer <= Constants.numberOfTrajectories))
+			{
+				flag = false;
+			}
+		}
+		
+		scan.close();
+		
+		return answer;
+	}
+	
+	static void populateParameters(int answer) {
+		
+		switch (answer) {
+        case 1: 
+        	name = Constants.nameLeftSwitch;
+        	vel = Constants.velLeftSwitch;
+        	acc = Constants.accLeftSwitch;
+        	jerk = Constants.jerkLeftSwitch;
+        	points = Constants.pointsLeftSwitch;
+        	break;
+        case 2: 
+        	name = Constants.nameRightSwitch;
+        	vel = Constants.velRightSwitch;
+        	acc = Constants.accRightSwitch;
+        	jerk = Constants.jerkRightSwitch;
+        	points = Constants.pointsRightSwitch;
+            break;
+        case 3:  
+        	name = Constants.nameLeftCrossLine;
+        	vel = Constants.velLeftCrossLine;
+        	acc = Constants.accLeftCrossLine;
+        	jerk = Constants.jerkLeftCrossLine;
+        	points = Constants.pointsLeftCrossLine;
+            break;        	
+        case 4:
+        	name = Constants.nameRightCrossLine;
+        	vel = Constants.velRightCrossLine;
+        	acc = Constants.accRightCrossLine;
+        	jerk = Constants.jerkRightCrossLine;
+        	points = Constants.pointsRightCrossLine;
+        	break;
+        case 5:
+        	name = Constants.nameLeftScale;
+        	vel = Constants.velLeftScale;
+        	acc = Constants.accLeftScale;
+        	jerk = Constants.jerkLeftScale;
+        	points = Constants.pointsLeftScale;
+        	break;
+        case 6:
+        	name = Constants.nameRightScale;
+        	vel = Constants.velRightScale;
+        	acc = Constants.accRightScale;
+        	jerk = Constants.jerkRightScale;
+        	points = Constants.pointsRightScale;
+        	break;
+        case 7:
+        	name = Constants.nameTest;
+        	vel = Constants.velTest;
+        	acc = Constants.accTest;
+        	jerk = Constants.jerkTest;
+        	points = Constants.pointsTest;
+        	break;
+        default:
+        	break;
+		}
 	}
 
 }
