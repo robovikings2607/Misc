@@ -33,7 +33,7 @@ public class Constants {
 	public static final double jerkRightSwitch = 100;
 	public static final Waypoint[] pointsRightSwitch = new Waypoint[] {
 		     new Waypoint(168,16,Pathfinder.d2r(90)),
-			 new Waypoint(220,124,Pathfinder.d2r(90))
+			 new Waypoint(216,120,Pathfinder.d2r(90))
 	};
 	
 	/*
@@ -41,23 +41,23 @@ public class Constants {
 	 */
 	public static final String nameLeftCrossLine = "LeftCrossLine";
 	public static final double velLeftCrossLine = 120;
-	public static final double accLeftCrossLine = 100;
-	public static final double jerkLeftCrossLine = 100;
+	public static final double accLeftCrossLine = 50;
+	public static final double jerkLeftCrossLine = 50;
 	public static final Waypoint[] pointsLeftCrossLine = new Waypoint[] {
-		     new Waypoint(48,16,Pathfinder.d2r(90)),
-			 new Waypoint(48,160,Pathfinder.d2r(90))
+		     new Waypoint(45.7,16,Pathfinder.d2r(90)),
+			 new Waypoint(45.7,136,Pathfinder.d2r(90))
 	};
 	
 	/*
 	 * Configuration for the Right Start Cross the Line mission
 	 */
 	public static final String nameRightCrossLine = "RightCrossLine";
-	public static final double velRightCrossLine = 120;
-	public static final double accRightCrossLine = 100;
-	public static final double jerkRightCrossLine = 100;
+	public static final double velRightCrossLine = 60;
+	public static final double accRightCrossLine = 50;
+	public static final double jerkRightCrossLine = 50;
 	public static final Waypoint[] pointsRightCrossLine = new Waypoint[] {
-		     new Waypoint(272,16,Pathfinder.d2r(90)),
-			 new Waypoint(272,160,Pathfinder.d2r(90))
+		     new Waypoint(278.3,16.0,Pathfinder.d2r(90)),
+			 new Waypoint(278.3,104,Pathfinder.d2r(90))
 	};
 	
 	/*
@@ -68,8 +68,8 @@ public class Constants {
 	public static final double accLeftScale = 100;
 	public static final double jerkLeftScale = 100;
 	public static final Waypoint[] pointsLeftScale = new Waypoint[] {
-		     new Waypoint(48,16,Pathfinder.d2r(90)),
-			 new Waypoint(48,320,Pathfinder.d2r(90))
+		     new Waypoint(43.7,17.75,Pathfinder.d2r(90)),
+			 new Waypoint(30,298,Pathfinder.d2r(90))
 	};
 	
 	/*
@@ -80,20 +80,20 @@ public class Constants {
 	public static final double accRightScale = 100;
 	public static final double jerkRightScale = 100;
 	public static final Waypoint[] pointsRightScale = new Waypoint[] {
-		     new Waypoint(276,16,Pathfinder.d2r(90)),
-			 new Waypoint(276,320,Pathfinder.d2r(90))
+		     new Waypoint(278.3,16,Pathfinder.d2r(90)),
+			 new Waypoint(278.3,316,Pathfinder.d2r(90))
 	};
 	
 	/*
 	 * Configuration for a Test mission
 	 */
 	public static final String nameTest = "Test";
-	public static final double velTest = 120;
-	public static final double accTest = 100;
-	public static final double jerkTest = 100;
+	public static final double velTest = 60;
+	public static final double accTest = 50;
+	public static final double jerkTest = 50;
 	public static final Waypoint[] pointsTest = new Waypoint[] {
 		     new Waypoint(276,16,Pathfinder.d2r(90)),
-			 new Waypoint(276,320,Pathfinder.d2r(90))
+			 new Waypoint(290,30,Pathfinder.d2r(180))
 	};
 	
 }
