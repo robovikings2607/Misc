@@ -88,7 +88,7 @@ public class PathGenerator {
 				        seg.dt, seg.x, seg.y, seg.position, seg.velocity, 
 				            seg.acceleration, seg.jerk, seg.heading);
 				    
-				    outfileleft_ticks.printf("{%f,%f,10},\n",seg.position*ticksperinch,seg.velocity*ticksperinch/10);
+				    outfileleft_ticks.printf("%f,%f,10\n",seg.position*ticksperinch,seg.velocity*ticksperinch/10);
 				    outfile_class.printf("{%f,%f,10},\n",seg.position*ticksperinch,seg.velocity*ticksperinch/10);
 				    
 				}
@@ -111,7 +111,7 @@ public class PathGenerator {
 				        seg.dt, seg.x, seg.y, seg.position, seg.velocity, 
 				            seg.acceleration, seg.jerk, seg.heading);
 				    
-				    outfileright_ticks.printf("{%f,%f,10},\n",seg.position*ticksperinch,seg.velocity*ticksperinch/10);
+				    outfileright_ticks.printf("%f,%f,10\n",seg.position*ticksperinch,seg.velocity*ticksperinch/10);
 				    outfile_class.printf("{%f,%f,10},\n",seg.position*ticksperinch,seg.velocity*ticksperinch/10);
 				    
 				}

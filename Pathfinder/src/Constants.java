@@ -1,3 +1,8 @@
+/*
+ * This class holds the trajectories definitions
+ */
+
+
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Waypoint;
 
