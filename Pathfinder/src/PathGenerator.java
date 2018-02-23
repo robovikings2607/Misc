@@ -144,9 +144,19 @@ public class PathGenerator {
 			System.out.println("2): " + Constants.nameRightSwitch);
 			System.out.println("3): " + Constants.nameLeftCrossLine);
 			System.out.println("4): " + Constants.nameRightCrossLine);
-			System.out.println("5): " + Constants.nameLeftScale);
-			System.out.println("6): " + Constants.nameRightScale);
-			System.out.println("7): " + Constants.nameTest);
+			System.out.println("5): " + Constants.nameLeftScaleSide);
+			System.out.println("6); " + Constants.nameLeftScaleFront);
+			System.out.println("7): " + Constants.nameRightScaleSide);
+			System.out.println("8): " + Constants.nameRightScaleFront);
+			System.out.println("9): " + Constants.nameRightScaleFailLeftFront);
+			System.out.println("10): " + Constants.nameRightScaleFailLeftSide);
+			System.out.println("11): " + Constants.nameLeftScaleFailRightFront);
+			System.out.println("12): " + Constants.nameLeftScaleFailRightSide);
+			System.out.println("13): " + Constants.nameRightRightSwitch);
+			System.out.println("14): " + Constants.nameRightLeftSwitch);
+			System.out.println("15): " + Constants.nameLeftRightSwitch);
+			System.out.println("16): " + Constants.nameLeftLeftSwitch);
+			System.out.println("17): " + Constants.nameTest);
 			System.out.printf("Enter your Choice: ");
 			answer = scan.nextInt();
 			
@@ -193,26 +203,95 @@ public class PathGenerator {
         	points = Constants.pointsRightCrossLine;
         	break;
         case 5:
-        	name = Constants.nameLeftScale;
-        	vel = Constants.velLeftScale;
-        	acc = Constants.accLeftScale;
-        	jerk = Constants.jerkLeftScale;
-        	points = Constants.pointsLeftScale;
+        	name = Constants.nameLeftScaleSide;
+        	vel = Constants.velLeftScaleSide;
+        	acc = Constants.accLeftScaleSide;
+        	jerk = Constants.jerkLeftScaleSide;
+        	points = Constants.pointsLeftScaleSide;
         	break;
         case 6:
-        	name = Constants.nameRightScale;
-        	vel = Constants.velRightScale;
-        	acc = Constants.accRightScale;
-        	jerk = Constants.jerkRightScale;
-        	points = Constants.pointsRightScale;
+        	name = Constants.nameLeftScaleFront;
+        	vel = Constants.velLeftScaleFront;
+        	acc = Constants.accLeftScaleFront;
+        	jerk = Constants.jerkLeftScaleFront;
+        	points = Constants.pointsLeftScaleFront;
         	break;
         case 7:
+        	name = Constants.nameRightScaleSide;
+        	vel = Constants.velRightScaleSide;
+        	acc = Constants.accRightScaleSide;
+        	jerk = Constants.jerkRightScaleSide;
+        	points = Constants.pointsRightScaleSide;
+        	break;
+        case 8:
+        	name = Constants.nameRightScaleFront;
+        	vel = Constants.velRightScaleFront;
+        	acc = Constants.accRightScaleFront;
+        	jerk = Constants.jerkRightScaleFront;
+        	points = Constants.pointsRightScaleFront;
+        	break;
+        case 9:
+        	name = Constants.nameRightScaleFailLeftFront;
+        	vel = Constants.velRightScaleFailLeftFront;
+        	acc = Constants.accRightScaleFailLeftFront;
+        	jerk = Constants.jerkRightScaleFailLeftFront;
+        	points = Constants.pointsRightScaleFailLeftFront;
+        	break;
+        case 10:
+        	name = Constants.nameRightScaleFailLeftSide;
+        	vel = Constants.velRightScaleFailLeftSide;
+        	acc = Constants.accRightScaleFailLeftSide;
+        	jerk = Constants.jerkRightScaleFailLeftSide;
+        	points = Constants.pointsRightScaleFailLeftSide;
+        	break;
+        case 11:
+        	name = Constants.nameLeftScaleFailRightFront;
+        	vel = Constants.velLeftScaleFailRightFront;
+        	acc = Constants.accLeftScaleFailRightFront;
+        	jerk = Constants.jerkLeftScaleFailRightFront;
+        	points = Constants.pointsLeftScaleFailRightFront;
+        	break;
+        case 12:
+        	name = Constants.nameLeftScaleFailRightSide;
+        	vel = Constants.velLeftScaleFailRightSide;
+        	acc = Constants.accLeftScaleFailRightSide;
+        	jerk = Constants.jerkLeftScaleFailRightSide;
+        	points = Constants.pointsLeftScaleFailRightSide;
+        	break;
+        case 13:
+        	name = Constants.nameRightRightSwitch;
+        	vel = Constants.velRightRightSwitch;
+        	acc = Constants.accRightRightSwitch;
+        	jerk = Constants.jerkRightRightSwitch;
+        	points = Constants.pointsRightRightSwitch;
+        	break;
+        case 14:
+        	name = Constants.nameRightLeftSwitch;
+        	vel = Constants.velRightLeftSwitch;
+        	acc = Constants.accRightLeftSwitch;
+        	jerk = Constants.jerkRightLeftSwitch;
+        	points = Constants.pointsRightLeftSwitch;
+        	break;
+        case 15:
+        	name = Constants.nameLeftRightSwitch;
+        	vel = Constants.velLeftRightSwitch;
+        	acc = Constants.accLeftRightSwitch;
+        	jerk = Constants.jerkLeftRightSwitch;
+        	points = Constants.pointsLeftRightSwitch;
+        	break;
+        case 16:
+        	name = Constants.nameLeftLeftSwitch;
+        	vel = Constants.velLeftLeftSwitch;
+        	acc = Constants.accLeftLeftSwitch;
+        	jerk = Constants.jerkLeftLeftSwitch;
+        	points = Constants.pointsLeftLeftSwitch;
+        	break;
+        case 17:
         	name = Constants.nameTest;
         	vel = Constants.velTest;
         	acc = Constants.accTest;
         	jerk = Constants.jerkTest;
         	points = Constants.pointsTest;
-        	break;
         default:
         	break;
 		}
